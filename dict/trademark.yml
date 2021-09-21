@@ -1,0 +1,14 @@
+id: GitHub
+description: GitHub
+expected: GitHub
+patterns:
+  - /github/i
+  - /git hub/i
+allows:
+specs:
+  - from: github
+    to: GitHub
+  - from: Github
+    to: GitHub
+tags:
+  - noun

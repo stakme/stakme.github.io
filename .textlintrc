@@ -1,0 +1,12 @@
+{
+  "filters": {},
+  "rules": {
+    "max-ten": {
+      "max": 3
+    },
+    "@proofdict/proofdict": {
+      "dictGlob": "./dict/*.yml"
+    },
+    "no-mix-dearu-desumasu": true
+  }
+}
