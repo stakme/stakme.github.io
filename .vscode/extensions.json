@@ -2,6 +2,7 @@
   "recommendations": [
     "mhutchie.git-graph",
     "editorconfig.editorconfig",
-    "taichi.vscode-textlint"
+    "taichi.vscode-textlint",
+    "tyriar.sort-lines"
   ]
 }
