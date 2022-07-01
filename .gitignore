@@ -1,3 +1,5 @@
 .cache
+.next
+.swc
 node_modules
 .DS_Store

@@ -1,25 +1,32 @@
 {
-  "name": "blog",
-  "version": "0.0.0",
-  "description": "blog",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/stakme/blog.git"
-  },
-  "author": "@stakme",
-  "bugs": {
-    "url": "https://github.com/stakme/blog/issues"
-  },
-  "homepage": "https://github.com/stakme/blog#readme",
-  "devDependencies": {
-    "@proofdict/textlint-rule-proofdict": "^3.1.2",
-    "prettier": "^2.4.1",
-    "prettier-plugin-md-nocjsp": "^1.2.0",
-    "textlint": "^12.0.2",
-    "textlint-rule-max-ten": "^4.0.2",
-    "textlint-rule-no-mix-dearu-desumasu": "^5.0.0"
-  }
+    "name": "blog",
+    "version": "0.0.0",
+    "description": "blog",
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/stakme/blog.git"
+    },
+    "author": "@stakme",
+    "bugs": {
+        "url": "https://github.com/stakme/blog/issues"
+    },
+    "homepage": "https://github.com/stakme/blog#readme",
+    "dependencies": {
+        "next": "latest",
+        "react": "17.0.2",
+        "react-dom": "17.0.2"
+    },
+    "devDependencies": {
+        "@proofdict/textlint-rule-proofdict": "^3.1.2",
+        "prettier": "^2.4.1",
+        "prettier-plugin-md-nocjsp": "^1.2.0",
+        "textlint": "^12.0.2",
+        "textlint-rule-max-ten": "^4.0.2",
+        "textlint-rule-no-mix-dearu-desumasu": "^5.0.0"
+    }
 }
