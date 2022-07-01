@@ -4,7 +4,7 @@
     "description": "blog",
     "scripts": {
         "dev": "next dev",
-        "build": "next build && next export",
+        "build": "next build && next export -o docs",
         "start": "next start"
     },
     "repository": {
