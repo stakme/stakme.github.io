@@ -1,9 +1,11 @@
 import fs from "fs"
+import Link from "next/link"
 import parser from "../peg/parse"
 
 function Blog({ post }) {
     return (
         <>
+            <Link href="/">top</Link>
             {post.map(line => <div key={line}>{line}<br /></div>
             )}
         </>
