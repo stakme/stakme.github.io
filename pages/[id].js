@@ -4,7 +4,7 @@ import parser from "../peg/parse"
 function Blog({ post }) {
     return (
         <>
-            {post.map(line => <>{line}<br /></>
+            {post.map(line => <div key={line}>{line}<br /></div>
             )}
         </>
     )
@@ -15,6 +15,7 @@ export async function getStaticProps(ctx) {
 
     return {
         props: {
+            key: ctx.params.id,
             post: parser.parse(post),
         },
     }
