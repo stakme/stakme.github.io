@@ -1,4 +1,5 @@
 import fs from "fs"
+import { parse } from "../peg/parse"
 
 const postByID = {};
 
@@ -7,7 +8,7 @@ const postByID = {};
     for (const name of markdowns) {
         const post = fs.readFileSync(`notes/${name}`).toString()
         const id = name.replace(/\.md$/, '')
-        postByID[id] = post
+        postByID[id] = { id, ...parse(post) }
     }
 })()
 
@@ -16,5 +17,5 @@ export function getPost(id) {
 }
 
 export function getAllPosts() {
-    return Object.entries(postByID).map(([k, v]) => ({ id: k, post: v }))
+    return Object.entries(postByID).map(([k, v]) => v)
 }

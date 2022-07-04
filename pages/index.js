@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import { getAllPosts } from '../query'
 
 export default function Home({ posts }) {
     return (
@@ -16,7 +17,7 @@ export default function Home({ posts }) {
                     大丈夫になりたい
                 </h2>
                 <ul>
-                    {posts.map(p => <li><Link href={`/${encodeURIComponent(p.id)}`}>{p.id}</Link></li>)}
+                    {posts.map(p => <li key={p.id} style={{ marginBottom: '1em' }}><Link href={`/${encodeURIComponent(p.id)}`}><span>[{p.published_at}] {p.id}<br />{p.summary}</span></Link></li>)}
                 </ul>
             </main>
         </div>
@@ -24,6 +25,7 @@ export default function Home({ posts }) {
 }
 
 export async function getStaticProps(ctx) {
-    const posts = require('../query').getAllPosts();
+    const posts = getAllPosts();
+    console.log(posts)
     return { props: { posts } }
 }

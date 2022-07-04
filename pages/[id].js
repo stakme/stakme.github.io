@@ -1,31 +1,31 @@
-import fs from "fs"
 import Link from "next/link"
-import parser from "../peg/parse"
+import { getPost, getAllPosts } from '../query'
 
 function Blog({ post }) {
     return (
         <>
             <Link href="/">top</Link>
-            {post.map(line => <div key={line}>{line}<br /></div>
-            )}
+            <article>
+                <p style={{ marginBottom: '1em', color: 'gray' }}>{post.published_at}</p>
+                {post.content.map(line => <div key={line}>{line}<br /></div>)}
+            </article>
         </>
     )
 }
 
 export async function getStaticProps(ctx) {
-    const post = fs.readFileSync(`notes/${ctx.params.id}.md`).toString()
-
+    const post = getPost(ctx.params.id)
     return {
         props: {
             key: ctx.params.id,
-            post: parser.parse(post),
+            post: post,
         },
     }
 }
 
 export async function getStaticPaths() {
-    const notes = fs.readdirSync("notes")
-    const paths = notes.map(n => ({ params: { id: n.replace(/\.md$/, '') } }))
+    const posts = getAllPosts();
+    const paths = posts.map(post => ({ params: { id: post.id } }))
     return {
         paths, fallback: false
     }
