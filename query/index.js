@@ -1,21 +1,22 @@
 import fs from "fs"
 import { parse } from "../peg/parse"
+import { Temporal } from "@js-temporal/polyfill";
 
-const postByID = {};
-
-(function () {
+function postByID() {
+    const postByID = {};
     const markdowns = fs.readdirSync("notes")
     for (const name of markdowns) {
-        const post = fs.readFileSync(`notes/${name}`).toString()
+        const post = parse(fs.readFileSync(`notes/${name}`).toString())
         const id = name.replace(/\.md$/, '')
-        postByID[id] = { id, ...parse(post) }
+        postByID[id] = { ...post, id, timestamp: Temporal.ZonedDateTime.from(post.published_at).epochSeconds }
     }
-})()
+    return postByID
+}
 
 export function getPost(id) {
-    return postByID[id]
+    return postByID()[id]
 }
 
 export function getAllPosts() {
-    return Object.entries(postByID).map(([k, v]) => v)
+    return Object.entries(postByID()).map(([k, v]) => v)
 }

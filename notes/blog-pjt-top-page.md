@@ -1,7 +1,7 @@
 ---
 summary: トップページつくった
 tags: [next.js]
-published_at: 2022-07-02T00:29:51+0900
+published_at: 2022-07-02T00:29:51+09:00[Asia/Tokyo]
 ---
 
 トップページに遷移できるようになりました。まるでWebサイトみたいだ…

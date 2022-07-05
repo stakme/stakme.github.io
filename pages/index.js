@@ -28,6 +28,6 @@ export default function Home({ posts }) {
 }
 
 export async function getStaticProps(ctx) {
-    const posts = getAllPosts();
+    const posts = getAllPosts().sort((a, b) => a.timestamp - b.timestamp);
     return { props: { posts } }
 }

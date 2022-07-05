@@ -1,7 +1,7 @@
 ---
 summary: パーサー改良した
 tags: [next.js]
-published_at: 2022-07-02T00:29:51+0900
+published_at: 2022-07-05T10:21:04+09:00[Asia/Tokyo]
 ---
 
 ### pjt.init
