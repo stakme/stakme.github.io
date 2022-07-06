@@ -4,4 +4,4 @@ interface ParsedPost {
     published_at: string;
     content: string[];
 }
-export function parse(content: string): ParsedPost
+export function parse(content: string): ParsedPost;
