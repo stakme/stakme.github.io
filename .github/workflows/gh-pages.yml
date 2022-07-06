@@ -1,0 +1,34 @@
+name: GitHub Pages
+on:
+    push:
+        branches:
+            - master
+
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+
+jobs:
+    deploy:
+        runs-on: ubuntu-20.04
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        concurrency:
+            group: ${{ github.workflow }}-${{ github.ref }}
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+            - name: Build
+              run: script/build.sh
+            - name: Create Archive
+              run: tar -vv --create --file gh-pages-${{ github.sha }}.tar --directory docs .
+            - uses: actions/upload-artifact@v3
+              with:
+                  path: gh-pages-${{ github.sha }}.tar
+            - uses: actions/deploy-pages@v1
+              with:
+                  emit_telemetry: false
