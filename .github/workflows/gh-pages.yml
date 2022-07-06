@@ -5,7 +5,8 @@ on:
             - nextjs_setup
             - master
 
-permissions: write-all
+permissions:
+    write-all
     # contents: read
     # pages: write
     # id-token: write
@@ -20,13 +21,6 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: 16
-            - uses: actions/cache@v3
-                id: node_modules_cache_id
-                env:
-                    cache-name: cache-node-modules
-                with:
-                    path: '**/node_modules'
-                    key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
             - name: Build
               run: script/build.sh
             - name: Create Archive
