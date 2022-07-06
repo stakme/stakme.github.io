@@ -8,20 +8,20 @@ const page: FC<{ posts: Post[] }> = ({ posts }) => {
     return (
         <div className="container">
             <Head>
-                <title>@stakme | 大丈夫になりたい</title>
+                <title >@stakme | 大丈夫になりたい</title>
             </Head>
 
-            <main>
-                <h1>
+            <main className="m-8">
+                <h1 className="text-xl font-bold ">
                     @stakme
                 </h1>
                 <h2>
                     大丈夫になりたい
                 </h2>
-                <ul>
+                <ul className="mt-8">
                     {posts.map(p =>
-                        <li key={p.id} style={{ marginBottom: '1em' }}>
-                            <Link href={`/${encodeURIComponent(p.id)}`}><a>[{p.published_at}] {p.id}<br />{p.summary}</a></Link>
+                        <li key={p.id} className="mt-2">
+                            <Link href={`/${encodeURIComponent(p.id)}`}><a className="text-sky-400 hover:text-sky-500 focus:text-sky-700 visited:text-sky-900">[{p.published_at}] {p.id}<br />{p.summary}</a></Link>
                         </li>)}
                 </ul>
             </main>
