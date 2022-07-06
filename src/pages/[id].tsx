@@ -1,12 +1,17 @@
-import Link from "next/link"
+import Head from 'next/head'
 import { FC } from "react"
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { getPost, getAllPosts, Post, PostID } from '../query'
+import { TextLink } from "../components/link"
 
 const Blog: FC<{ post: Post }> = ({ post }) => {
     return (
         <main className="m-8">
-            <Link href="/">top</Link>
+            <Head>
+                <title >大丈夫になりたい | {post.summary}</title>
+            </Head>
+
+            <TextLink href="/">top</TextLink>
             <article>
                 <p style={{ marginBottom: '1em', color: 'gray' }}>{post.published_at}</p>
                 {post.content.map(line => <div key={line}>{line}<br /></div>)}

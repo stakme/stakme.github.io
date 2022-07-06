@@ -3,10 +3,11 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { getAllPosts, Post } from '../query'
+import { TextLink } from "../components/link"
 
 const page: FC<{ posts: Post[] }> = ({ posts }) => {
     return (
-        <div className="container">
+        <div>
             <Head>
                 <title >@stakme | 大丈夫になりたい</title>
             </Head>
@@ -21,7 +22,7 @@ const page: FC<{ posts: Post[] }> = ({ posts }) => {
                 <ul className="mt-8">
                     {posts.map(p =>
                         <li key={p.id} className="mt-2">
-                            <Link href={`/${encodeURIComponent(p.id)}`}><a className="text-sky-400 hover:text-sky-500 focus:text-sky-700 visited:text-sky-900">[{p.published_at}] {p.id}<br />{p.summary}</a></Link>
+                            <TextLink href={`/${encodeURIComponent(p.id)}`}>[{p.published_at}] {p.id}<br />{p.summary}</TextLink>
                         </li>)}
                 </ul>
             </main>
