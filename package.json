@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "next dev",
         "build": "script/build.sh",
-        "lint": "next lint",
+        "lint": "prettier src --write && next lint",
         "start": "next start"
     },
     "repository": {
