@@ -1,0 +1,24 @@
+name: GitHub Pages
+on:
+    push:
+        branches:
+            - nextjs_setup
+            - master
+jobs:
+    deploy:
+        runs-on: ubuntu-20.04
+        steps:
+            - uses: actions/checkout@v2
+            - name: Build
+              run: script/build.sh
+            - uses: actions/upload-artifact@v3
+              with:
+                  path: ./docs
+                  retention-days: 1
+            - name: deploy
+              uses: peaceiris/actions-gh-pages@v3
+              if: ${{ github.ref == 'refs/heads/main' }}
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./public
+            - uses: actions/deploy-pages@v1
