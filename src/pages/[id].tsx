@@ -5,13 +5,13 @@ import { getPost, getAllPosts, Post, PostID } from '../query'
 
 const Blog: FC<{ post: Post }> = ({ post }) => {
     return (
-        <>
+        <main className="m-8">
             <Link href="/">top</Link>
             <article>
                 <p style={{ marginBottom: '1em', color: 'gray' }}>{post.published_at}</p>
                 {post.content.map(line => <div key={line}>{line}<br /></div>)}
             </article>
-        </>
+        </main>
     )
 }
 
