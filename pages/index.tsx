@@ -1,8 +1,10 @@
+import { FC } from "react"
 import Head from 'next/head'
 import Link from 'next/link'
-import { getAllPosts } from '../query'
+import { GetStaticProps, GetStaticPaths } from 'next'
+import { getAllPosts, Post } from '../query'
 
-export default function Home({ posts }) {
+const page: FC<{ posts: Post[] }> = ({ posts }) => {
     return (
         <div className="container">
             <Head>
@@ -27,7 +29,9 @@ export default function Home({ posts }) {
     )
 }
 
-export async function getStaticProps(ctx) {
+export const getStaticProps: GetStaticProps = (ctx) => {
     const posts = getAllPosts().sort((a, b) => a.timestamp - b.timestamp);
     return { props: { posts } }
 }
+
+export default page;

@@ -1,7 +1,9 @@
 import Link from "next/link"
-import { getPost, getAllPosts } from '../query'
+import { FC } from "react"
+import { GetStaticProps, GetStaticPaths } from 'next'
+import { getPost, getAllPosts, Post, PostID } from '../query'
 
-function Blog({ post }) {
+const Blog: FC<{ post: Post }> = ({ post }) => {
     return (
         <>
             <Link href="/">top</Link>
@@ -13,17 +15,18 @@ function Blog({ post }) {
     )
 }
 
-export async function getStaticProps(ctx) {
-    const post = getPost(ctx.params.id)
+export const getStaticProps: GetStaticProps<{ id: string }> = async (ctx) => {
+    const postID = ctx.params!.id as PostID
+    const post = getPost(postID)
     return {
         props: {
-            key: ctx.params.id,
+            id: postID,
             post: post,
         },
     }
 }
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
     const posts = getAllPosts();
     const paths = posts.map(post => ({ params: { id: post.id } }))
     return {

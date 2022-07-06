@@ -28,7 +28,8 @@ published_at: 2022-07-05T23:42:37+09:00[Asia/Tokyo]
 
 ### pjt.exec
 
-- 
+- TypeScript導入簡単すぎてひっくり返った、1分で終わった https://nextjs.org/docs/basic-features/typescript
+
 
 ### pjt.close
 

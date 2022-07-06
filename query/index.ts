@@ -1,9 +1,21 @@
 import fs from "fs"
-import { parse } from "../peg/parse"
+import { parse } from "./parse"
 import { Temporal } from "@js-temporal/polyfill";
 
-function postByID() {
-    const postByID = {};
+
+export type PostID = string;
+export interface Post {
+    id: PostID;
+    summary: string;
+    tags: string;
+    published_at: string;
+    content: string[];
+    timestamp: number;
+}
+type PostObject = { [key: PostID]: Post }
+
+function postByID(): PostObject {
+    const postByID: PostObject = {};
     const markdowns = fs.readdirSync("notes")
     for (const name of markdowns) {
         const post = parse(fs.readFileSync(`notes/${name}`).toString())
@@ -13,7 +25,7 @@ function postByID() {
     return postByID
 }
 
-export function getPost(id) {
+export function getPost(id: PostID) {
     return postByID()[id]
 }
 
