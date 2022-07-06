@@ -30,8 +30,9 @@ published_at: 2022-07-05T23:42:37+09:00[Asia/Tokyo]
 
 - TypeScript導入簡単すぎてひっくり返った、1分で終わった https://nextjs.org/docs/basic-features/typescript
 - 既存ロジックのTS化は、完全に勝手を忘れており1hちゃんとかかりました
-- 
+- 他はまあ想定通りに進行
 
 ### pjt.close
 
-- 
+- かなり見られるソースコードになりました、めでたし
+- 次回はGitHub Action導入です
