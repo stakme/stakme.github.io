@@ -20,8 +20,12 @@ jobs:
                   node-version: 16
             - name: Build
               run: script/build.sh
+            - name: Create Archive
+              run: tar -vv --create --file gh-pages-${{ github.sha }}.tar --directory docs .
             - uses: actions/upload-artifact@v3
               with:
-                  path: ./docs
+                  path: gh-pages-${{ github.sha }}.tar
                   retention-days: 1
             - uses: actions/deploy-pages@v1
+              with:
+                  emit_telemetry: false
