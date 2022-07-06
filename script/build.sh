@@ -4,4 +4,4 @@ npx next build;
 npx next export -o docs;
 echo stak.me > docs/CNAME;
 
-npx peggy -o query/parse.js query/parse.pegjs
+npx peggy -o src/query/parse.js src/query/parse.pegjs
