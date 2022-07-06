@@ -27,7 +27,6 @@ jobs:
             - uses: actions/upload-artifact@v3
               with:
                   path: gh-pages-${{ github.sha }}.tar
-                  retention-days: 1
             - uses: actions/deploy-pages@v1
               with:
                   emit_telemetry: false
