@@ -4,6 +4,10 @@ on:
         branches:
             - nextjs_setup
             - master
+
+permissions:
+    idToken: write
+
 jobs:
     deploy:
         runs-on: ubuntu-20.04
