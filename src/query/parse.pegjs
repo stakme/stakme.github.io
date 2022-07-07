@@ -1,4 +1,4 @@
-Post = h:Header c:Contents { h.contents = c; return h }
+Post = h:Header c:Contents _* { h.contents = c; return h }
 
 Contents = Content*
 
@@ -7,7 +7,7 @@ Content
     / Paragraph
 
 Paragraph
-    = ParagraphSeparator? ls:Line+ { return {type: "paragraph", lines: ls} }
+    = ParagraphSeparator? ls:Line+ _* { return {type: "paragraph", lines: ls} }
 ParagraphSeparator = _ _
 
 // header

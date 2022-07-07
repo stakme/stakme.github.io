@@ -17,14 +17,19 @@ function postByID(): PostObject {
     const postByID: PostObject = {};
     const markdowns = fs.readdirSync("notes");
     for (const name of markdowns) {
-        const post = parse(fs.readFileSync(`notes/${name}`).toString());
-        const id = name.replace(/\.md$/, "");
-        postByID[id] = {
-            ...post,
-            id,
-            timestamp: Temporal.ZonedDateTime.from(post.published_at)
+        try {
+            const post = parse(fs.readFileSync(`notes/${name}`).toString());
+            const id = name.replace(/\.md$/, "");
+            postByID[id] = {
+                ...post,
+                id,
+                timestamp: Temporal.ZonedDateTime.from(post.published_at)
                 .epochSeconds,
-        };
+            };
+        } catch (e) {
+            console.error(name, e)
+            process.exit(1)
+        }
     }
     return postByID;
 }
