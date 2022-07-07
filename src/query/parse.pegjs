@@ -1,3 +1,24 @@
+Contents = Content*
+
+Content
+    = Paragraph
+    / List
+
+Paragraph
+    = ParagraphSeparator? ls:Line+ { return {type: "paragraph", lines: ls} }
+ParagraphSeparator = _ _
+
+// list
+List = _* ls:ListLine+ _* { return {type: "list", lines: ls } }
+ListLine
+    = UnorderedList
+    / OrderedList
+UnorderedList
+    = ns:NestSpace* "-" Space l:Line { return {type: "unordered", depth: ns.length, line: l} }
+OrderedList
+    = ns:NestSpace* [0-9]+"." Space l:Line { return {type: "ordered", depth: ns.length, line: l} }
+
+
 Post = h:Header c:Content { h.content = c; return h }
 
 // header
@@ -11,16 +32,17 @@ HeaderKey
 HeaderContent
     = key:HeaderKey ": " value:Str [\n] { return [key, value] }
 
-// content
-Content
-    = Line+
-
 // base
 Line
     = str:Str _ { return str }
+LastLine
+    = str:Str { return str }
 Str
-    = chars:[^\n]* { return chars.join(""); }
+    = chars:[^\n]+ { return chars.join(""); }
 Space
-    = [\s]*
+    = " "+
+NestSpace
+    = "    "
 _ "newline"
     = [\r] ? [\n]
+
