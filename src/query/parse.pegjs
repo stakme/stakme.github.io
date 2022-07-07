@@ -50,9 +50,9 @@ LinePart
    / RawPart
 
 CodePart
-    = "`" s:CodePartStr1 "`" { return {type: "code", str: s } }
-    / "``" !"`"  s:CodePartStr2  "``" { return {type: "code", chars: s } }
-    / "```"  s:CodePartStr3  "```" { return {type: "code", chars: s } }
+    = "```" Space* s:CodePartStr3 "```" { return {type: "code", chars: s } }
+    / "``" Space* s:CodePartStr2 "``" { return {type: "code", chars: s } }
+    / "`" s:CodePartStr1 "`" { return {type: "code", str: s } }
     / "`" { return {type: "raw", str: "`" } }
 CodePartStr1
     = cs:CodePartChar1+ { return cs.join("") }
@@ -64,10 +64,12 @@ CodePartChar1
     = [^`]
     / "```" !"`" { return "```" }
 CodePartChar2
-    = [^`]
+    = Space &"``" { return "" }
+    / c:[^`] !" ``" { return c }
     / "`" !"`" { return "`" }
 CodePartChar3
-    = [^`]
+    = Space &"```" { return "" }
+    / [^`]
     / "``" !"`" { return "``" }
     / "`" !"`" { return "`" }
 
@@ -94,7 +96,3 @@ NestSpace
     = "    "
 _ "newline"
     = [\r] ? [\n]
-
-
-
-
