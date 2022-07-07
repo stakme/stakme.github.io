@@ -3,12 +3,9 @@ Post = h:Header c:Contents _* { h.contents = c; return h }
 Contents = Content*
 
 Content
-    = List
+    = PreformattedText
+    / List
     / Paragraph
-
-Paragraph
-    = ParagraphSeparator? ls:Line+ _* { return {type: "paragraph", lines: ls} }
-ParagraphSeparator = _ _
 
 // header
 Header
@@ -21,6 +18,16 @@ HeaderKey
 HeaderContent
     = key:HeaderKey ": " value:Str [\n] { return [key, value] }
 
+// paragraph
+Paragraph
+    = _* ls:Line+ _* { return {type: "paragraph", lines: ls} }
+
+// pre
+PreformattedText
+    = _* "```"  s:Str _ l:PreLine* "```" _? { return {type: "pre", style: s, lines:l } }
+PreLine
+    = !"```" s:Str _  { return s }
+
 // list
 List = _* ls:ListLine+ _* { return {type: "list", items: ls } }
 ListLine
@@ -30,6 +37,7 @@ UnorderedList
     = ns:NestSpace* "-" Space l:Line _ { return {type: "unordered", depth: ns.length, line: l} }
 OrderedList
     = ns:NestSpace* [0-9]+"." Space l:Line _ { return {type: "ordered", depth: ns.length, line: l} }
+
 
 // line
 Line = LinePart+
