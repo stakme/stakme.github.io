@@ -38,6 +38,7 @@ Line = LinePart+
 LinePart
    = CodePart
    / LinkPart
+   / ImagePart
    / RawPart
 
 CodePart
@@ -66,10 +67,14 @@ LinkPart
     = "[" c:[^\]]* "](" l:[^)]* ")" { return { type: "link", content: c.join(""), href: l.join("") } }
     / "[" { return {type: "raw", chars: "[" } }
 
+ImagePart
+    = "![" c:[^\]]* "](" l:[^)]* ")" { return { type: "image", alt: c.join(""), src: l.join("") } }
+    / "!" { return {type: "raw", chars: "!" } }
+
 RawPart
     = cs:RawPartChar+ { return {type: "raw", str: cs.join("")} }
 RawPartChar
-    = [^`[\n]
+    = [^!`[\n]
 
 // base
 Str
