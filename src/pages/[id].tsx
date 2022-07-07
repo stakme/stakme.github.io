@@ -42,7 +42,11 @@ const renderLine: (line: Line) => ReactNode = (line) => {
 };
 
 const renderListItems: (list: NestedList) => ReactNode = (list) => {
-    const c = list.depth === 0 ? "mt-1" : `mt-1 ml-${list.depth * 12}`;
+    const classList = ["mt-1"];
+    if (list.depth === 1) {
+        classList.push("ml-8");
+    }
+    const c = classList.join(" ");
     return list.items.map((item, i) => {
         if (item.child) {
             return (
