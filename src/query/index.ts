@@ -1,5 +1,5 @@
 import fs from "fs";
-import { parse } from "./parse";
+import { parse, Content } from "./parse";
 import { Temporal } from "@js-temporal/polyfill";
 
 export type PostID = string;
@@ -8,9 +8,10 @@ export interface Post {
     summary: string;
     tags: string;
     published_at: string;
-    content: string[];
+    contents: Content[];
     timestamp: number;
 }
+
 type PostObject = { [key: PostID]: Post };
 
 function postByID(): PostObject {
@@ -24,11 +25,11 @@ function postByID(): PostObject {
                 ...post,
                 id,
                 timestamp: Temporal.ZonedDateTime.from(post.published_at)
-                .epochSeconds,
+                    .epochSeconds,
             };
         } catch (e) {
-            console.error(name, e)
-            process.exit(1)
+            console.error(name, e);
+            process.exit(1);
         }
     }
     return postByID;

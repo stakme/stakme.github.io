@@ -1,8 +1,27 @@
 import Head from "next/head";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { getPost, getAllPosts, Post, PostID } from "../query";
 import { TextLink } from "../components/link";
+import { Content, Line } from "../query/parse";
+
+const renderLine: (line: Line) => ReactNode = (line) => {
+    return line.map((l) => {
+        if (l.type === "raw") {
+            return l.str;
+        }
+        if (l.type === "code") {
+            return <code>{l.str}</code>;
+        }
+    });
+};
+
+const RenderContent: FC<{ content: Content }> = ({ content }) => {
+    if (content.type === "paragraph") {
+        return <p>{content.lines.map((line) => renderLine(line)).flat()}</p>;
+    }
+    return <div></div>;
+};
 
 const Blog: FC<{ post: Post }> = ({ post }) => {
     return (
@@ -16,12 +35,11 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
                 <p style={{ marginBottom: "1em", color: "gray" }}>
                     {post.published_at}
                 </p>
-                {post.content.map((line) => (
-                    <div key={line}>
-                        {line}
-                        <br />
-                    </div>
-                ))}
+                <p>
+                    {post.contents.map((content, i) => (
+                        <RenderContent content={content} key={i} />
+                    ))}
+                </p>
             </article>
         </main>
     );
