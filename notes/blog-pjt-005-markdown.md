@@ -33,7 +33,7 @@ published_at: 2022-07-06T19:03:41+09:00[Asia/Tokyo]
 
 ### pjt.exec
 
--
+-   リスト、コード、pre実装まで2時間弱かかった。想定よりは早い
 
 ### pjt.close
 

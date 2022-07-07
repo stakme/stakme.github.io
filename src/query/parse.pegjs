@@ -37,6 +37,7 @@ Line = LinePart+
 
 LinePart
    = CodePart
+   / LinkPart
    / RawPart
 
 CodePart
@@ -61,11 +62,14 @@ CodePartChar3
     / "``" !"`" { return "``" }
     / "`" !"`" { return "`" }
 
+LinkPart
+    = "[" c:[^\]]* "](" l:[^)]* ")" { return { type: "link", content: c.join(""), href: l.join("") } }
+    / "[" { return {type: "raw", chars: "[" } }
+
 RawPart
     = cs:RawPartChar+ { return {type: "raw", str: cs.join("")} }
-
 RawPartChar
-    = [^`\n]
+    = [^`[\n]
 
 // base
 Str
@@ -76,5 +80,6 @@ NestSpace
     = "    "
 _ "newline"
     = [\r] ? [\n]
+
 
 
