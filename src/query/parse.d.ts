@@ -5,7 +5,7 @@ interface ParsedPost {
     contents: Content[];
 }
 
-type Content = Paragraph;
+type Content = Paragraph | List;
 interface Paragraph {
     type: "paragraph";
     lines: Line[];
@@ -26,6 +26,16 @@ interface ImageLinePart {
     alt: string;
     src: string;
     title?: string;
+}
+
+interface List {
+    type: "list";
+    items: ListItem[];
+}
+interface ListItem {
+    type: "ordered" | "unordered";
+    depth: number;
+    line: Line;
 }
 
 export function parse(content: string): ParsedPost;

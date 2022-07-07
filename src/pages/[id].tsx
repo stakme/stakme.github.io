@@ -11,7 +11,7 @@ const renderLine: (line: Line) => ReactNode = (line) => {
             return l.str;
         }
         if (l.type === "code") {
-            return <code>{l.str}</code>;
+            return <code className="bg-orange-100 p-1 mx-1">{l.str}</code>;
         }
         if (l.type === "image") {
             return <img src={l.src} alt={l.alt} title={l.title} />;
@@ -22,6 +22,9 @@ const renderLine: (line: Line) => ReactNode = (line) => {
 const RenderContent: FC<{ content: Content }> = ({ content }) => {
     if (content.type === "paragraph") {
         return <p>{content.lines.map((line) => renderLine(line)).flat()}</p>;
+    }
+    if (content.type === "list") {
+        console.log(content);
     }
     return <div></div>;
 };
