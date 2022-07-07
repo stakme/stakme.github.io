@@ -12,7 +12,7 @@ interface Paragraph {
 }
 
 type Line = LinePart[];
-type LinePart = RawLinePart | CodeLinePart | ImageLinePart;
+type LinePart = RawLinePart | CodeLinePart | ImageLinePart | LinkLinePart;
 interface RawLinePart {
     type: "raw";
     str: string;
@@ -26,6 +26,11 @@ interface ImageLinePart {
     alt: string;
     src: string;
     title?: string;
+}
+interface LinkLinePart {
+    type: "link";
+    content: string;
+    href: string;
 }
 
 interface List {

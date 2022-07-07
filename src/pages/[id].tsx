@@ -3,6 +3,7 @@ import { FC, ReactNode } from "react";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { getPost, getAllPosts, Line, Content, Post, PostID } from "../query";
 import { TextLink } from "../components/link";
+import { NestedList, NestedListItem } from "../query/type";
 
 const renderLine: (line: Line) => ReactNode = (line) => {
     return line.map((l) => {
@@ -12,18 +13,48 @@ const renderLine: (line: Line) => ReactNode = (line) => {
         if (l.type === "code") {
             return <code className="bg-orange-100 p-1 mx-1">{l.str}</code>;
         }
+        if (l.type === "link") {
+            return <TextLink href={l.href}>{l.content}</TextLink>;
+        }
         if (l.type === "image") {
             return <img src={l.src} alt={l.alt} title={l.title} />;
         }
     });
 };
 
-const RenderContent: FC<{ content: Content }> = ({ content }) => {
+const renderListItems: (items: NestedListItem[]) => ReactNode = (items) => {
+    return items.map((item) => {
+        const line = <li>{renderLine(item.line)}</li>;
+        if (!item.child) {
+            return <li>{renderLine(item.line)}</li>;
+        }
+        return [line, renderList(item.child)];
+    });
+};
+
+const renderList: (list: NestedList) => ReactNode = (list) => {
+    console.log(list);
+    if (list.order === "ordered") {
+        return <ol>{renderListItems(list.items)}</ol>;
+    }
+    if (list.order === "unordered") {
+        return <ul>{renderListItems(list.items)}</ul>;
+    }
+};
+
+const renderContent: (content: Content, index: number) => ReactNode = (
+    content,
+    i
+) => {
     if (content.type === "paragraph") {
-        return <p>{content.lines.map((line) => renderLine(line)).flat()}</p>;
+        return (
+            <p key={i}>
+                {content.lines.map((line) => renderLine(line)).flat()}
+            </p>
+        );
     }
     if (content.type === "list") {
-        console.log(content);
+        return renderList(content);
     }
     return <div></div>;
 };
@@ -40,11 +71,7 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
                 <p style={{ marginBottom: "1em", color: "gray" }}>
                     {post.published_at}
                 </p>
-                <p>
-                    {post.contents.map((content, i) => (
-                        <RenderContent content={content} key={i} />
-                    ))}
-                </p>
+                {post.contents.map((content, i) => renderContent(content, i))}
             </article>
         </main>
     );
