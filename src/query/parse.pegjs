@@ -52,7 +52,7 @@ LinePart
 CodePart
     = "```" Space* s:CodePartStr3 "```" { return {type: "code", chars: s } }
     / "``" Space* s:CodePartStr2 "``" { return {type: "code", chars: s } }
-    / "`" s:CodePartStr1 "`" { return {type: "code", str: s } }
+    / "`" Space* s:CodePartStr1 "`" { return {type: "code", str: s } }
     / "`" { return {type: "raw", str: "`" } }
 CodePartStr1
     = cs:CodePartChar1+ { return cs.join("") }
@@ -61,17 +61,17 @@ CodePartStr2
 CodePartStr3
     = cs:CodePartChar3+ { return cs.join("") }
 CodePartChar1
-    = [^`]
+    = Space+ &"`" { return "" }
+    / [^`]
     / "```" !"`" { return "```" }
 CodePartChar2
-    = Space &"``" { return "" }
+    = Space+ &"``" { return "" }
     / c:[^`] !" ``" { return c }
     / "`" !"`" { return "`" }
 CodePartChar3
-    = Space &"```" { return "" }
+    = Space+ &"```" { return "" }
     / [^`]
-    / "``" !"`" { return "``" }
-    / "`" !"`" { return "`" }
+    / "`" !"``" { return "`" }
 
 LinkPart
     = "[" c:[^\]]* "](" l:[^)]* ")" { return { type: "link", content: c.join(""), href: l.join("") } }
