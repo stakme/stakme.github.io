@@ -44,7 +44,7 @@ CodePart
     = "`" s:CodePartStr1 "`" { return {type: "code", str: s } }
     / "``" !"`"  s:CodePartStr2  "``" { return {type: "code", chars: s } }
     / "```"  s:CodePartStr3  "```" { return {type: "code", chars: s } }
-    / "`" { return {type: "raw", chars: "`" } }
+    / "`" { return {type: "raw", str: "`" } }
 CodePartStr1
     = cs:CodePartChar1+ { return cs.join("") }
 CodePartStr2

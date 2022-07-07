@@ -2,10 +2,10 @@ interface ParsedPost {
     summary: string;
     tags: string;
     published_at: string;
-    contents: Content[];
+    contents: ParsedContent[];
 }
 
-type Content = Paragraph | List;
+type ParsedContent = Paragraph | List;
 interface Paragraph {
     type: "paragraph";
     lines: Line[];

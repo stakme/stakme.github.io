@@ -1,9 +1,8 @@
 import Head from "next/head";
 import { FC, ReactNode } from "react";
 import { GetStaticProps, GetStaticPaths } from "next";
-import { getPost, getAllPosts, Post, PostID } from "../query";
+import { getPost, getAllPosts, Line, Content, Post, PostID } from "../query";
 import { TextLink } from "../components/link";
-import { Content, Line } from "../query/parse";
 
 const renderLine: (line: Line) => ReactNode = (line) => {
     return line.map((l) => {

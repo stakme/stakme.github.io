@@ -1,16 +1,8 @@
 import fs from "fs";
-import { parse, Content } from "./parse";
+import { parse } from "./parse";
 import { Temporal } from "@js-temporal/polyfill";
-
-export type PostID = string;
-export interface Post {
-    id: PostID;
-    summary: string;
-    tags: string;
-    published_at: string;
-    contents: Content[];
-    timestamp: number;
-}
+import { convertList } from "./convert";
+import { Post, PostID } from "./type";
 
 type PostObject = { [key: PostID]: Post };
 
@@ -26,6 +18,12 @@ function postByID(): PostObject {
                 id,
                 timestamp: Temporal.ZonedDateTime.from(post.published_at)
                     .epochSeconds,
+                contents: post.contents.map((content) => {
+                    if (content.type === "list") {
+                        return convertList(content);
+                    }
+                    return content;
+                }),
             };
         } catch (e) {
             console.error(name, e);
@@ -42,3 +40,6 @@ export function getPost(id: PostID) {
 export function getAllPosts() {
     return Object.entries(postByID()).map(([k, v]) => v);
 }
+
+export type { Post, PostID, Content } from "./type";
+export type { Line } from "./parse";

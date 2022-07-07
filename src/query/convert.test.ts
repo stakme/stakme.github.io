@@ -1,4 +1,6 @@
-import { Line, List } from "./parse";
+import { convertList } from "./convert";
+import { List } from "./parse";
+import { NestedList } from "./type";
 
 const list223: List = {
     type: "list",
@@ -12,56 +14,30 @@ const list223: List = {
     ],
 };
 
-export interface List2 {
-    type: "unordered" | "ordered";
-    items: ListItem[];
-}
-export interface ListItem {
-    line: Line;
-    child?: List2;
-}
-
-const convertList: (list: List) => List2 = (list) => {
-    const result: List2 = {
-        type: list.items[0].type,
-        items: [],
-    };
-    let depth = 0;
-    const parentByDepth: { [key: number]: ListItem[] } = { 0: result.items };
-    let itemsRef: ListItem[] = result.items;
-    for (const item of list.items) {
-        if (depth < item.depth) {
-            depth = item.depth;
-            const next = itemsRef[itemsRef.length - 1];
-            next.child = {
-                type: item.type,
-                items: [{ line: item.line }],
-            };
-            itemsRef = next.child.items;
-            parentByDepth[depth] = itemsRef;
-            continue;
-        }
-        if (depth > item.depth) {
-            depth = item.depth;
-            itemsRef = parentByDepth[depth];
-        }
-        itemsRef.push({ line: item.line });
-    }
-    return result;
-};
-
 test("list conversion", () => {
-    const expected: List2 = {
-        type: "unordered",
+    const expected: NestedList = {
+        type: "list",
+        order: "unordered",
         items: [
             { line: [{ type: "raw", str: "a" }] },
             {
                 line: [{ type: "raw", str: "b" }],
                 child: {
-                    type: "ordered",
+                    type: "list",
+                    order: "ordered",
                     items: [
                         { line: [{ type: "raw", str: "X" }] },
-                        { line: [{ type: "raw", str: "Y" }] },
+                        {
+                            line: [{ type: "raw", str: "Y" }],
+                            child: {
+                                type: "list",
+                                order: "unordered",
+                                items: [
+                                    { line: [{ type: "raw", str: "!" }] },
+                                    { line: [{ type: "raw", str: "?" }] },
+                                ],
+                            },
+                        },
                         { line: [{ type: "raw", str: "Z" }] },
                     ],
                 },
@@ -76,6 +52,8 @@ test("list conversion", () => {
             { type: "unordered", depth: 0, line: [{ type: "raw", str: "b" }] },
             { type: "ordered", depth: 1, line: [{ type: "raw", str: "X" }] },
             { type: "ordered", depth: 1, line: [{ type: "raw", str: "Y" }] },
+            { type: "unordered", depth: 2, line: [{ type: "raw", str: "!" }] },
+            { type: "unordered", depth: 2, line: [{ type: "raw", str: "?" }] },
             { type: "ordered", depth: 1, line: [{ type: "raw", str: "Z" }] },
             { type: "unordered", depth: 0, line: [{ type: "raw", str: "c" }] },
         ],
