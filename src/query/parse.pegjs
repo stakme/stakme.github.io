@@ -13,7 +13,7 @@ ParagraphSeparator = _ _
 // header
 Header
     = HeaderSeparator cs:HeaderContent* HeaderSeparator { return cs.reduce((p, v) => { p[v[0]] = v[1]; return p }, {}) }
-HeaderSeparator = "---"[\n]
+HeaderSeparator = "---"_+
 HeaderKey
     = "summary"
     / "tags"
@@ -22,14 +22,14 @@ HeaderContent
     = key:HeaderKey ": " value:Str [\n] { return [key, value] }
 
 // list
-List = _* ls:ListLine+ _* { return {type: "list", lines: ls } }
+List = _* ls:ListLine+ _* { return {type: "list", items: ls } }
 ListLine
     = UnorderedList
     / OrderedList
 UnorderedList
-    = ns:NestSpace* "-" Space l:Line { return {type: "unordered", depth: ns.length, line: l} }
+    = ns:NestSpace* "-" Space l:Line _ { return {type: "unordered", depth: ns.length, line: l} }
 OrderedList
-    = ns:NestSpace* [0-9]+"." Space l:Line { return {type: "ordered", depth: ns.length, line: l} }
+    = ns:NestSpace* [0-9]+"." Space l:Line _ { return {type: "ordered", depth: ns.length, line: l} }
 
 
 // line
@@ -45,14 +45,17 @@ CodePart
     / "```"  s:CodePartStr3  "```" { return {type: "code", chars: s } }
     / "`" { return {type: "raw", chars: "`" } }
 CodePartStr1
-    = cs:[^`\n]+ { return cs.join("") }
+    = cs:CodePartChar1+ { return cs.join("") }
 CodePartStr2
     = cs:CodePartChar2+ { return cs.join("") }
+CodePartStr3
+    = cs:CodePartChar3+ { return cs.join("") }
+CodePartChar1
+    = [^`]
+    / "```" !"`" { return "```" }
 CodePartChar2
     = [^`]
     / "`" !"`" { return "`" }
-CodePartStr3
-    = cs:CodePartChar3+ { return cs.join("") }
 CodePartChar3
     = [^`]
     / "``" !"`" { return "``" }
@@ -65,8 +68,6 @@ RawPartChar
     = [^`\n]
 
 // base
-LastLine
-    = str:Str { return str }
 Str
     = chars:[^\n]+ { return chars.join(""); }
 Space
