@@ -24,21 +24,31 @@ const renderLine: (line: Line) => ReactNode = (line) => {
 
 const renderListItems: (items: NestedListItem[]) => ReactNode = (items) => {
     return items.map((item) => {
-        const line = <li>{renderLine(item.line)}</li>;
-        if (!item.child) {
-            return <li>{renderLine(item.line)}</li>;
+        if (item.child) {
+            return (
+                <li className="mt-4">
+                    {[renderLine(item.line), renderList(item.child)]}
+                </li>
+            );
         }
-        return [line, renderList(item.child)];
+        return <li className="mt-1">{renderLine(item.line)}</li>;
     });
 };
 
 const renderList: (list: NestedList) => ReactNode = (list) => {
-    console.log(list);
     if (list.order === "ordered") {
-        return <ol>{renderListItems(list.items)}</ol>;
+        return (
+            <ol className="list-decimal list-inside">
+                {renderListItems(list.items)}
+            </ol>
+        );
     }
     if (list.order === "unordered") {
-        return <ul>{renderListItems(list.items)}</ul>;
+        return (
+            <ul className="list-disc list-inside">
+                {renderListItems(list.items)}
+            </ul>
+        );
     }
 };
 
@@ -54,7 +64,7 @@ const renderContent: (content: Content, index: number) => ReactNode = (
         );
     }
     if (content.type === "list") {
-        return renderList(content);
+        return <div className="my-8">{renderList(content)}</div>;
     }
     return <div></div>;
 };
