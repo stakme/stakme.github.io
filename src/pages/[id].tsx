@@ -129,7 +129,6 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
 export const getStaticProps: GetStaticProps<{ id: string }> = async (ctx) => {
     const postID = ctx.params!.id as PostID;
     const post = getPost(postID);
-    console.log((post.contents[1] as NestedList).items![1].child!.items[1]);
     return {
         props: {
             id: postID,
