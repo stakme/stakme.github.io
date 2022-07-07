@@ -41,17 +41,18 @@ const renderLine: (line: Line) => ReactNode = (line) => {
     });
 };
 
-const renderListItems: (items: NestedListItem[]) => ReactNode = (items) => {
-    return items.map((item, i) => {
+const renderListItems: (list: NestedList) => ReactNode = (list) => {
+    const c = list.depth === 0 ? "mt-1" : `mt-1 ml-${list.depth * 12}`;
+    return list.items.map((item, i) => {
         if (item.child) {
             return (
-                <li className="mt-4">
+                <li className={c}>
                     {[renderLine(item.line), renderList(item.child)]}
                 </li>
             );
         }
         return (
-            <li className="mt-1" key={i}>
+            <li className={c} key={i}>
                 {renderLine(item.line)}
             </li>
         );
@@ -62,15 +63,13 @@ const renderList: (list: NestedList) => ReactNode = (list) => {
     if (list.order === "ordered") {
         return (
             <ol className="list-decimal list-inside">
-                {renderListItems(list.items)}
+                {renderListItems(list)}
             </ol>
         );
     }
     if (list.order === "unordered") {
         return (
-            <ul className="list-disc list-inside">
-                {renderListItems(list.items)}
-            </ul>
+            <ul className="list-disc list-inside">{renderListItems(list)}</ul>
         );
     }
 };

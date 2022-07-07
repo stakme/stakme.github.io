@@ -5,6 +5,7 @@ export const convertList: (list: List) => NestedList = (list) => {
     const result: NestedList = {
         type: "list",
         order: list.items[0].type,
+        depth: 0,
         items: [],
     };
     let depth = 0;
@@ -19,6 +20,7 @@ export const convertList: (list: List) => NestedList = (list) => {
             next.child = {
                 type: "list",
                 order: item.type,
+                depth: item.depth,
                 items: [{ line: item.line }],
             };
             parentByDepth[depth] = next.child.items;

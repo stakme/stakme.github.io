@@ -18,6 +18,7 @@ test("list conversion", () => {
     const expected: NestedList = {
         type: "list",
         order: "unordered",
+        depth: 0,
         items: [
             { line: [{ type: "raw", str: "a" }] },
             {
@@ -25,6 +26,7 @@ test("list conversion", () => {
                 child: {
                     type: "list",
                     order: "ordered",
+                    depth: 1,
                     items: [
                         { line: [{ type: "raw", str: "X" }] },
                         {
@@ -32,6 +34,7 @@ test("list conversion", () => {
                             child: {
                                 type: "list",
                                 order: "unordered",
+                                depth: 2,
                                 items: [
                                     { line: [{ type: "raw", str: "!" }] },
                                     { line: [{ type: "raw", str: "?" }] },

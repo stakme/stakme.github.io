@@ -15,6 +15,7 @@ export type Content = Paragraph | NestedList | PreformattedText;
 export interface NestedList {
     type: "list";
     order: "unordered" | "ordered";
+    depth: number;
     items: NestedListItem[];
 }
 export interface NestedListItem {
