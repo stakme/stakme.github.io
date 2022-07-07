@@ -46,7 +46,7 @@ const renderListItems: (list: NestedList) => ReactNode = (list) => {
     return list.items.map((item, i) => {
         if (item.child) {
             return (
-                <li className={c}>
+                <li className={c} key={i}>
                     {[renderLine(item.line), renderList(item.child)]}
                 </li>
             );
@@ -62,14 +62,16 @@ const renderListItems: (list: NestedList) => ReactNode = (list) => {
 const renderList: (list: NestedList) => ReactNode = (list) => {
     if (list.order === "ordered") {
         return (
-            <ol className="list-decimal list-inside">
+            <ol className="list-decimal list-inside" key={list.depth}>
                 {renderListItems(list)}
             </ol>
         );
     }
     if (list.order === "unordered") {
         return (
-            <ul className="list-disc list-inside">{renderListItems(list)}</ul>
+            <ul className="list-disc list-inside" key={list.depth}>
+                {renderListItems(list)}
+            </ul>
         );
     }
 };
@@ -123,6 +125,7 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
 export const getStaticProps: GetStaticProps<{ id: string }> = async (ctx) => {
     const postID = ctx.params!.id as PostID;
     const post = getPost(postID);
+    console.log((post.contents[1] as NestedList).items![1].child!.items[1]);
     return {
         props: {
             id: postID,

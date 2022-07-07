@@ -50,8 +50,8 @@ LinePart
    / RawPart
 
 CodePart
-    = "```" Space* s:CodePartStr3 "```" { return {type: "code", chars: s } }
-    / "``" Space* s:CodePartStr2 "``" { return {type: "code", chars: s } }
+    = "```" Space* s:CodePartStr3 "```" { return {type: "code", str: s } }
+    / "``" Space* s:CodePartStr2 "``" { return {type: "code", str: s } }
     / "`" Space* s:CodePartStr1 "`" { return {type: "code", str: s } }
     / "`" { return {type: "raw", str: "`" } }
 CodePartStr1
@@ -75,12 +75,12 @@ CodePartChar3
 
 LinkPart
     = "[" c:[^\]]* "](" l:[^)]* ")" { return { type: "link", content: c.join(""), href: l.join("") } }
-    / "[" { return {type: "raw", chars: "[" } }
+    / "[" { return {type: "raw", str: "[" } }
 
 ImagePart
     = "![" c:[^\]]* "](" l:[^) ]* Space "\"" t:[^"]* "\")" { return { type: "image", alt: c.join(""), src: l.join(""), title: t.join("") } }
     / "![" c:[^\]]* "](" l:[^)]* ")" { return { type: "image", alt: c.join(""), src: l.join("") } }
-    / "!" { return {type: "raw", chars: "!" } }
+    / "!" { return {type: "raw", str: "!" } }
 
 RawPart
     = cs:RawPartChar+ { return {type: "raw", str: cs.join("")} }
