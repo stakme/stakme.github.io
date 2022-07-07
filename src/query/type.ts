@@ -1,4 +1,4 @@
-import { Line, Paragraph } from "./parse";
+import { Line, Paragraph, PreformattedText } from "./parse";
 
 export type PostID = string;
 export interface Post {
@@ -10,7 +10,7 @@ export interface Post {
     timestamp: number;
 }
 
-export type Content = Paragraph | NestedList;
+export type Content = Paragraph | NestedList | PreformattedText;
 
 export interface NestedList {
     type: "list";

@@ -24,9 +24,10 @@ Paragraph
 
 // pre
 PreformattedText
-    = _* "```"  s:Str _ l:PreLine* "```" _? { return {type: "pre", style: s, lines:l } }
+    = _* "```"  s:Str? _ l:PreLine* "```" _* { return {type: "pre", style: s, lines:l } }
 PreLine
-    = !"```" s:Str _  { return s }
+    = !"```" s:Str? _  { return s }
+    / !"```" _  { return "" }
 
 // list
 List = _* ls:ListLine+ _* { return {type: "list", items: ls } }
@@ -93,6 +94,7 @@ NestSpace
     = "    "
 _ "newline"
     = [\r] ? [\n]
+
 
 
 

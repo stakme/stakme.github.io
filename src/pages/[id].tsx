@@ -1,29 +1,48 @@
 import Head from "next/head";
 import { FC, ReactNode } from "react";
 import { GetStaticProps, GetStaticPaths } from "next";
+import Image from "next/image";
 import { getPost, getAllPosts, Line, Content, Post, PostID } from "../query";
 import { TextLink } from "../components/link";
 import { NestedList, NestedListItem } from "../query/type";
 
 const renderLine: (line: Line) => ReactNode = (line) => {
-    return line.map((l) => {
+    return line.map((l, i) => {
         if (l.type === "raw") {
             return l.str;
         }
         if (l.type === "code") {
-            return <code className="bg-orange-100 p-1 mx-1">{l.str}</code>;
+            return (
+                <code className="bg-orange-100 p-1 mx-1" key={i}>
+                    {l.str}
+                </code>
+            );
         }
         if (l.type === "link") {
-            return <TextLink href={l.href}>{l.content}</TextLink>;
+            return (
+                <TextLink href={l.href} key={i}>
+                    {l.content}
+                </TextLink>
+            );
         }
         if (l.type === "image") {
-            return <img src={l.src} alt={l.alt} title={l.title} />;
+            return (
+                <span className="block max-w-md" key={i}>
+                    <Image
+                        src={l.src}
+                        alt={l.alt}
+                        title={l.title}
+                        width={948}
+                        height={514}
+                    />
+                </span>
+            );
         }
     });
 };
 
 const renderListItems: (items: NestedListItem[]) => ReactNode = (items) => {
-    return items.map((item) => {
+    return items.map((item, i) => {
         if (item.child) {
             return (
                 <li className="mt-4">
@@ -31,7 +50,11 @@ const renderListItems: (items: NestedListItem[]) => ReactNode = (items) => {
                 </li>
             );
         }
-        return <li className="mt-1">{renderLine(item.line)}</li>;
+        return (
+            <li className="mt-1" key={i}>
+                {renderLine(item.line)}
+            </li>
+        );
     });
 };
 
@@ -64,9 +87,20 @@ const renderContent: (content: Content, index: number) => ReactNode = (
         );
     }
     if (content.type === "list") {
-        return <div className="my-8">{renderList(content)}</div>;
+        return (
+            <div className="my-8" key={i}>
+                {renderList(content)}
+            </div>
+        );
     }
-    return <div></div>;
+    if (content.type === "pre") {
+        return (
+            <pre key={i} className="bg-stone-100 p-6 m-4">
+                {content.lines.join("\n")}
+            </pre>
+        );
+    }
+    return <span key={i}></span>;
 };
 
 const Blog: FC<{ post: Post }> = ({ post }) => {
@@ -78,9 +112,9 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
 
             <TextLink href="/">top</TextLink>
             <article>
-                <p style={{ marginBottom: "1em", color: "gray" }}>
+                <div style={{ marginBottom: "1em", color: "gray" }}>
                     {post.published_at}
-                </p>
+                </div>
                 {post.contents.map((content, i) => renderContent(content, i))}
             </article>
         </main>
