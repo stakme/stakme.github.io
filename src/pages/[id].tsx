@@ -13,6 +13,9 @@ const renderLine: (line: Line) => ReactNode = (line) => {
         if (l.type === "code") {
             return <code>{l.str}</code>;
         }
+        if (l.type === "image") {
+            return <img src={l.src} alt={l.alt} title={l.title} />;
+        }
     });
 };
 

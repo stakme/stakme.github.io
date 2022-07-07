@@ -31,7 +31,6 @@ UnorderedList
 OrderedList
     = ns:NestSpace* [0-9]+"." Space l:Line _ { return {type: "ordered", depth: ns.length, line: l} }
 
-
 // line
 Line = LinePart+
 
@@ -68,7 +67,8 @@ LinkPart
     / "[" { return {type: "raw", chars: "[" } }
 
 ImagePart
-    = "![" c:[^\]]* "](" l:[^)]* ")" { return { type: "image", alt: c.join(""), src: l.join("") } }
+    = "![" c:[^\]]* "](" l:[^) ]* Space "\"" t:[^"]* "\")" { return { type: "image", alt: c.join(""), src: l.join(""), title: t.join("") } }
+    / "![" c:[^\]]* "](" l:[^)]* ")" { return { type: "image", alt: c.join(""), src: l.join("") } }
     / "!" { return {type: "raw", chars: "!" } }
 
 RawPart
