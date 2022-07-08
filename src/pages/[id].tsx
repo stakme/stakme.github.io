@@ -27,15 +27,17 @@ const renderLine: (line: Line) => ReactNode = (line) => {
         }
         if (l.type === "image") {
             return (
-                <span className="block max-w-md" key={i}>
-                    <Image
-                        src={l.src}
-                        alt={l.alt}
-                        title={l.title}
-                        width={948}
-                        height={514}
-                    />
-                </span>
+                <Image
+                    key={i}
+                    src={l.src}
+                    alt={l.alt}
+                    title={l.title}
+                    objectFit="contain"
+                    layout="responsive"
+                    // TODO: そのうちなんとかする
+                    height="514"
+                    width="948"
+                />
             );
         }
     });
@@ -100,7 +102,7 @@ const renderContent: (content: Content, index: number) => ReactNode = (
     }
     if (content.type === "pre") {
         return (
-            <pre key={i} className="bg-stone-100 p-6 m-4">
+            <pre key={i} className="overflow-auto bg-stone-100 p-6 m-4">
                 {content.lines.join("\n")}
             </pre>
         );
@@ -110,9 +112,16 @@ const renderContent: (content: Content, index: number) => ReactNode = (
 
 const Blog: FC<{ post: Post }> = ({ post }) => {
     return (
-        <main className="m-8">
+        <main className="m-8 container mx-auto">
             <Head>
                 <title>大丈夫になりたい | {post.summary}</title>
+                <meta name="twitter:card" content="summary" />
+                <meta name="twitter:site" content="@stakme" />
+                <meta
+                    name="twitter:title"
+                    content="@stakme | 大丈夫になりたい"
+                />
+                <meta name="twitter:description" content={post.summary} />
             </Head>
 
             <TextLink href="/">top</TextLink>

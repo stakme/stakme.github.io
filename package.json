@@ -27,6 +27,7 @@
     "devDependencies": {
         "@js-temporal/polyfill": "^0.4.1",
         "@proofdict/textlint-rule-proofdict": "^3.1.2",
+        "@types/gtag.js": "^0.0.10",
         "@types/jest": "^28.1.4",
         "@types/react": "^18.0.15",
         "@types/react-dom": "^18.0.6",
