@@ -5,6 +5,7 @@ import Image from "next/image";
 import { getPost, getAllPosts, Line, Content, Post, PostID } from "../query";
 import { TextLink } from "../components/link";
 import { NestedList, NestedListItem } from "../query/type";
+import { createImage } from "../utils/image";
 
 const renderLine: (line: Line) => ReactNode = (line) => {
     return line.map((l, i) => {
@@ -138,6 +139,7 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
 export const getStaticProps: GetStaticProps<{ id: string }> = async (ctx) => {
     const postID = ctx.params!.id as PostID;
     const post = getPost(postID);
+    createImage("うおおおおお！テストテスト\n改行もテスト\nあああああ");
     return {
         props: {
             id: postID,
