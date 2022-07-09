@@ -12,6 +12,10 @@ function postByID(): PostObject {
     for (const name of markdowns) {
         try {
             const post = parse(fs.readFileSync(`notes/${name}`).toString());
+            if (post.draft) {
+                continue;
+            }
+
             const id = name.replace(/\.md$/, "");
             postByID[id] = {
                 ...post,

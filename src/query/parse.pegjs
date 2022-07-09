@@ -15,6 +15,7 @@ HeaderKey
     = "summary"
     / "tags"
     / "published_at"
+    / "draft"
 HeaderContent
     = key:HeaderKey ": " value:Str [\n] { return [key, value] }
 
