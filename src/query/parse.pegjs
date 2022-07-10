@@ -18,7 +18,10 @@ HeaderKey
     / "published_at"
     / "draft"
 HeaderContent
-    = key:HeaderKey ": " value:Str [\n] { return [key, value] }
+    = key:HeaderKey ": |" _ values:HeaderMultiLine* { return [key, values.join("\n")] }
+    / key:HeaderKey ": " value:Str [\n] { return [key, value] }
+HeaderMultiLine
+    = '    ' value:Str _ { return value }
 
 // paragraph
 Paragraph
@@ -98,3 +101,4 @@ NestSpace
     = "    "
 _ "newline"
     = [\r] ? [\n]
+

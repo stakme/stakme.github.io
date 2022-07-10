@@ -1,5 +1,6 @@
 ---
 summary: 公開を制御できるようになった
+og_title: |
 tags: [next.js]
 published_at: xxx
 draft: true
