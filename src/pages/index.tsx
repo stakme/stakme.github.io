@@ -53,8 +53,10 @@ const page: FC<{ posts: Post[] }> = ({ posts }) => {
     );
 };
 
-export const getStaticProps: GetStaticProps = (ctx) => {
-    const posts = getAllPosts().sort((a, b) => a.timestamp - b.timestamp);
+export const getStaticProps: GetStaticProps = async (ctx) => {
+    const posts = (await getAllPosts()).sort(
+        (a, b) => a.timestamp - b.timestamp
+    );
     return { props: { posts } };
 };
 

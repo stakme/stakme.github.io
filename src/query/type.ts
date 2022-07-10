@@ -4,6 +4,8 @@ export type PostID = string;
 export interface Post {
     id: PostID;
     summary: string;
+    ogTitle: string;
+    ogImagePath: string;
     tags: string;
     published_at: string;
     contents: Content[];

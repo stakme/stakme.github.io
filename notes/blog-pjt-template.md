@@ -1,7 +1,7 @@
 ---
 summary: 公開を制御できるようになった
 tags: [next.js]
-published_at: 2022-07-09T13:49:27+09:00[Asia/Tokyo]
+published_at: xxx
 draft: true
 ---
 

@@ -2,6 +2,7 @@ interface ParsedPost {
     summary: string;
     tags: string;
     published_at: string;
+    og_title?: string;
     draft?: string;
     contents: ParsedContent[];
 }

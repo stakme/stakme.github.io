@@ -4,7 +4,7 @@ import { GetStaticProps, GetStaticPaths } from "next";
 import Image from "next/image";
 import { getPost, getAllPosts, Line, Content, Post, PostID } from "../query";
 import { TextLink } from "../components/link";
-import { NestedList, NestedListItem } from "../query/type";
+import { NestedList } from "../query/type";
 
 const renderLine: (line: Line) => ReactNode = (line) => {
     return line.map((l, i) => {
@@ -115,13 +115,17 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
         <main className="m-8 container mx-auto">
             <Head>
                 <title>大丈夫になりたい | {post.summary}</title>
-                <meta name="twitter:card" content="summary" />
+                <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:site" content="@stakme" />
                 <meta
                     name="twitter:title"
                     content="@stakme | 大丈夫になりたい"
                 />
                 <meta name="twitter:description" content={post.summary} />
+                <meta
+                    name="twitter:image"
+                    content={`https://stak.me/public/${post.ogImagePath}`}
+                />
             </Head>
 
             <TextLink href="/">top</TextLink>
@@ -137,7 +141,7 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
 
 export const getStaticProps: GetStaticProps<{ id: string }> = async (ctx) => {
     const postID = ctx.params!.id as PostID;
-    const post = getPost(postID);
+    const post = await getPost(postID);
     return {
         props: {
             id: postID,
@@ -147,7 +151,7 @@ export const getStaticProps: GetStaticProps<{ id: string }> = async (ctx) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const posts = getAllPosts();
+    const posts = await getAllPosts();
     const paths = posts.map((post) => ({ params: { id: post.id } }));
     return {
         paths,

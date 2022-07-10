@@ -14,6 +14,7 @@ HeaderSeparator = "---"_+
 HeaderKey
     = "summary"
     / "tags"
+    / "og_title"
     / "published_at"
     / "draft"
 HeaderContent
