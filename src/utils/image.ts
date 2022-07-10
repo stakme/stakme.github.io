@@ -16,74 +16,17 @@ registerFont("font/M_PLUS_Rounded_1c/MPLUSRounded1c-Light.ttf", {
     weight: "300",
 });
 
-export interface FooterPosition {
-    icon: {
-        x: number;
-        y: number;
-        centerX: number;
-        centerY: number;
-        radius: number;
-    };
-    url: {
-        text: string;
-        x: number;
-        y: number;
-        width: number;
-    };
+interface ImageSpec {
+    width: number;
+    height: number;
+    footerHeight: number;
+    padding: number;
 }
 
-interface Point {
-    x: number;
-    y: number;
-}
-
-export const footerPosition: (
-    canvas: Canvas,
-    url: string,
-    font: string,
-    merginBottom: number,
-    radius: number
-) => FooterPosition = (canvas, url, font, merginBottom, radius) => {
-    const width = canvas.width;
-    const height = canvas.height;
-    const ctx = canvas.getContext("2d");
-    ctx.font = font;
-
-    const mergin = radius / 2;
-    const centerX = width / 2;
-    const centerY = height - merginBottom - radius;
-
-    const {
-        width: urlWidth,
-        actualBoundingBoxAscent,
-        actualBoundingBoxDescent,
-    } = ctx.measureText(url);
-    const urlHeight = actualBoundingBoxAscent + actualBoundingBoxDescent;
-    const footerWidth = radius * 2 + mergin + urlWidth;
-    const footerStart = centerX - footerWidth / 2;
-    return {
-        icon: {
-            x: footerStart,
-            y: centerY - radius,
-            centerX: footerStart + radius,
-            centerY: centerY,
-            radius,
-        },
-        url: {
-            text: url,
-            x: footerStart + radius * 2 + mergin,
-            y: Math.floor(centerY - urlHeight / 2),
-            width: urlWidth,
-        },
-    };
-};
-
-const width = 1200;
-const height = 600;
-const footerHeight = 170;
-const padding = 25;
-
-const background: (canvas: Canvas) => void = (canvas) => {
+const background: (canvas: Canvas, spec: ImageSpec) => void = (
+    canvas,
+    { padding }
+) => {
     const ctx = canvas.getContext("2d");
     ctx.fillStyle = ogBackground;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -97,8 +40,16 @@ const background: (canvas: Canvas) => void = (canvas) => {
     );
 };
 
-const debug: (canvas: Canvas) => void = (canvas) => {
+const debug: (canvas: Canvas, spec: ImageSpec) => void = (
+    canvas,
+    { width, height, padding, footerHeight }
+) => {
     const ctx = canvas.getContext("2d");
+
+    interface Point {
+        x: number;
+        y: number;
+    }
 
     const drawLine: (...points: Point[]) => void = (...points) => {
         ctx.beginPath();
@@ -118,10 +69,11 @@ const debug: (canvas: Canvas) => void = (canvas) => {
         y: height - padding - footerHeight,
     };
     drawLine({ x: width / 2, y: 0 }, { x: width / 2, y: height });
-    drawLine({ x: 0, y: height / 2 }, { x: width, y: height / 2 });
+    // drawLine({ x: 0, y: height / 2 }, { x: width, y: height / 2 });
     drawLine(
         titleStart,
-        footerStart,
+        { x: titleStart.x, y: height - padding },
+        { x: width - padding, y: height - padding },
         {
             x: titleStart.x + contentWidth,
             y: footerStart.y,
@@ -132,25 +84,19 @@ const debug: (canvas: Canvas) => void = (canvas) => {
         },
         titleStart
     );
+    drawLine(footerStart, { x: padding + contentWidth, y: footerStart.y });
     drawLine(
-        footerStart,
-        { x: footerStart.x, y: height - padding },
-        { x: footerStart.x + contentWidth, y: height - padding },
-        { x: padding + contentWidth, y: footerStart.y }
+        { x: padding, y: (height - footerHeight) / 2 },
+        { x: width - padding, y: (height - footerHeight) / 2 }
     );
 };
 
-export const createImage: (text: string) => void = async (text) => {
-    // canvas
-    const canvas = createCanvas(width, height);
+const title: (canvas: Canvas, spec: ImageSpec, text: string) => void = (
+    canvas,
+    { width, height, footerHeight, padding },
+    text
+) => {
     const ctx = canvas.getContext("2d");
-
-    // background
-    background(canvas);
-
-    debug(canvas);
-
-    // text
     const lines = text.split("\n").map((l) => l.trim());
     const fontSize = lines.length === 1 ? 70 : lines.length === 2 ? 60 : 50;
     ctx.font = `${fontSize}pt "M PLUS Rounded 1c"`;
@@ -164,38 +110,76 @@ export const createImage: (text: string) => void = async (text) => {
         .reduce((p, c) => (p > c ? p : c), 0);
     const lineHeight = textHeight * 1.4;
 
-    // position
-    const mergin = 40;
-    const footerHeight = 60;
-    const titleCenterY = mergin + (height - 3 * mergin - footerHeight) / 2;
+    const titleCenterY = (height - footerHeight) / 2;
     const titleStartY = titleCenterY - (lineHeight * lines.length) / 2;
-    const titleWidth = width - mergin * 2;
+    const titleWidth = width - padding * 2;
     const centerX = width / 2;
     lines.forEach((line, index) => {
         const centerY = titleStartY + index * lineHeight;
-        ctx.fillText(line, centerX, centerY - textHeight / 2, titleWidth);
+        ctx.fillText(line, centerX, centerY, titleWidth);
     });
+};
 
-    // footer
+const footer: (canvas: Canvas, spec: ImageSpec) => Promise<void> = async (
+    canvas,
+    { width, height, padding, footerHeight }
+) => {
+    const ctx = canvas.getContext("2d");
     ctx.font = `300 40pt "BIZ UDGothic"`;
-    const iconRadius = 40;
     ctx.textAlign = "left";
-    ctx.textBaseline = "top";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = ogTextColor;
 
-    const fp = footerPosition(
-        canvas,
-        "stak.me",
-        '300 40pt "BIZ UDGothic',
-        60,
-        40
-    );
-    ctx.fillText(fp.url.text, fp.url.x, fp.url.y, fp.url.width);
+    const iconRadius = 40;
+    const mergin = iconRadius / 2;
+    const centerX = width / 2;
+    const centerY = height - padding - footerHeight / 2;
+
+    const url = "stak.me";
+    const { width: urlWidth } = ctx.measureText(url);
+
+    const footerWidth = iconRadius * 2 + mergin + urlWidth;
+    const footerStart = centerX - footerWidth / 2;
+    ctx.fillText(url, footerStart + iconRadius * 2 + mergin, centerY, urlWidth);
     const icon = await loadImage("public/icon/icon.jpg");
 
     ctx.beginPath();
-    ctx.arc(fp.icon.centerX, fp.icon.centerY, iconRadius, 0, Math.PI * 2, true);
+    ctx.arc(
+        footerStart + iconRadius,
+        centerY,
+        iconRadius,
+        0,
+        Math.PI * 2,
+        true
+    );
+    ctx.closePath();
+    ctx.save();
     ctx.clip();
-    ctx.drawImage(icon, fp.icon.x, fp.icon.y, iconRadius * 2, iconRadius * 2);
+    ctx.drawImage(
+        icon,
+        footerStart,
+        centerY - iconRadius,
+        iconRadius * 2,
+        iconRadius * 2
+    );
+    ctx.rect(0, 0, width, height);
+    ctx.restore();
+};
+
+export const createImage: (text: string) => void = async (text) => {
+    const spec: ImageSpec = {
+        width: 1200,
+        height: 600,
+        footerHeight: 550 / 4,
+        padding: 25,
+    };
+    const canvas = createCanvas(spec.width, spec.height);
+    const ctx = canvas.getContext("2d");
+
+    background(canvas, spec);
+    // debug(canvas, spec);
+    await footer(canvas, spec);
+    title(canvas, spec, text);
 
     // output
     const buffer = canvas.toBuffer("image/png");
