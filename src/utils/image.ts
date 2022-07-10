@@ -1,11 +1,6 @@
-import {
-    createCanvas,
-    registerFont,
-    loadImage,
-    Canvas,
-    NodeCanvasRenderingContext2DSettings,
-} from "canvas";
+import { createCanvas, registerFont, loadImage, Canvas } from "canvas";
 import fs from "fs";
+import md5 from "md5";
 import { ogBackground, ogTextColor } from "./color";
 
 registerFont("font/M_PLUS_Rounded_1c/MPLUSRounded1c-Regular.ttf", {
@@ -166,7 +161,21 @@ const footer: (canvas: Canvas, spec: ImageSpec) => Promise<void> = async (
     ctx.restore();
 };
 
-export const createImage: (text: string) => void = async (text) => {
+export const getOGImagePath: (
+    id: string,
+    text: string
+) => Promise<string> = async (id, text) => {
+    const path = `og/${id}-${md5(text)}.png`;
+    if (!fs.existsSync(`public/${path}`)) {
+        await createImage(text, `public/${path}`);
+    }
+    return path;
+};
+
+export const createImage: (text: string, path: string) => void = async (
+    text,
+    path
+) => {
     const spec: ImageSpec = {
         width: 1200,
         height: 600,
@@ -183,5 +192,5 @@ export const createImage: (text: string) => void = async (text) => {
 
     // output
     const buffer = canvas.toBuffer("image/png");
-    fs.writeFileSync("./image.png", buffer);
+    fs.writeFileSync(path, buffer);
 };

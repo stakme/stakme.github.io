@@ -22,6 +22,12 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: 16
+            - uses: actions/cache@v3
+              with:
+                  path: |
+                      .next
+                      public/og
+                  key: bulid-cache-${{ runner.os }}
             - name: Build
               run: script/build.sh
             - name: Create Archive
