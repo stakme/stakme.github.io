@@ -24,7 +24,7 @@ export const createImage: (text: string) => void = async (text) => {
     // text
     const lines = text.split("\n").map((l) => l.trim());
     const fontSize = lines.length === 1 ? 70 : lines.length === 2 ? 60 : 50;
-    ctx.font = `bold ${fontSize}pt "M PLUS Rounded 1c"`;
+    ctx.font = `${fontSize}pt "M PLUS Rounded 1c"`;
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     ctx.fillStyle = ogTextColor;
@@ -47,21 +47,34 @@ export const createImage: (text: string) => void = async (text) => {
         ctx.fillText(line, centerX, centerY - textHeight / 2, titleWidth);
     });
 
+    // dev
+    ctx.fillRect(centerX, 0, 1, height);
+
     // footer
     ctx.font = `300 40pt "BIZ UDGothic"`;
     const footerText = "stak.me";
     const iconRadius = 40;
     const centerY = height - mergin - footerHeight;
+    const footerWidth =
+        iconRadius * 2 + mergin + ctx.measureText(footerText).width;
+    const footerStart = centerX - footerWidth / 2;
+    console.log(
+        ctx.measureText(footerText).width,
+        footerWidth,
+        footerStart,
+        footerStart + iconRadius * 2 + mergin
+    );
+    ctx.textAlign = "left";
     ctx.fillText(
         footerText,
-        centerX + iconRadius * 2,
+        footerStart + iconRadius * 2 + mergin,
         centerY - textHeight / 2,
-        titleWidth
+        footerWidth
     );
     const icon = await loadImage("public/icon/icon.jpg");
 
     ctx.arc(
-        centerX - mergin - iconRadius,
+        footerStart + iconRadius,
         centerY,
         iconRadius,
         0,
@@ -71,7 +84,7 @@ export const createImage: (text: string) => void = async (text) => {
     ctx.clip();
     ctx.drawImage(
         icon,
-        centerX - mergin - iconRadius * 2,
+        footerStart,
         centerY - iconRadius,
         iconRadius * 2,
         iconRadius * 2
