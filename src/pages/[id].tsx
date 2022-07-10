@@ -112,7 +112,7 @@ const renderContent: (content: Content, index: number) => ReactNode = (
 
 const Blog: FC<{ post: Post }> = ({ post }) => {
     return (
-        <main className="m-8 container mx-auto">
+        <main className="p-4 container mx-auto">
             <Head>
                 <title>大丈夫になりたい | {post.summary}</title>
                 <meta name="twitter:card" content="summary_large_image" />

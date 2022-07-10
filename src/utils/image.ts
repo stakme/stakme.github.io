@@ -107,7 +107,7 @@ const title: (canvas: Canvas, spec: ImageSpec, text: string) => void = (
 
     const titleCenterY = (height - footerHeight) / 2;
     const titleStartY = titleCenterY - (lineHeight * lines.length) / 2;
-    const titleWidth = width - padding * 2;
+    const titleWidth = width - padding * 4;
     const centerX = width / 2;
     lines.forEach((line, index) => {
         const centerY = titleStartY + index * lineHeight;
@@ -178,7 +178,7 @@ export const createImage: (text: string, path: string) => void = async (
 ) => {
     const spec: ImageSpec = {
         width: 1200,
-        height: 600,
+        height: 628,
         footerHeight: 550 / 4,
         padding: 25,
     };
