@@ -1,4 +1,4 @@
-import { createCanvas, registerFont, loadImage } from "canvas";
+import { createCanvas, registerFont, loadImage, Canvas } from "canvas";
 import fs from "fs";
 import { ogBackground, ogTextColor } from "./color";
 
@@ -9,6 +9,57 @@ registerFont("font/M_PLUS_Rounded_1c/MPLUSRounded1c-Light.ttf", {
     family: "M PLUS Rounded 1c",
     weight: "300",
 });
+
+export interface FooterPosition {
+    icon: {
+        x: number;
+        y: number;
+        radius: number;
+    };
+    url: {
+        text: string;
+        x: number;
+        y: number;
+    };
+}
+
+export const footerPosition: (
+    canvas: Canvas,
+    url: string,
+    font: string,
+    merginBottom: number,
+    radius: number
+) => FooterPosition = (canvas, url, font, merginBottom, radius) => {
+    const width = canvas.width;
+    const height = canvas.height;
+    const ctx = canvas.getContext("2d");
+    ctx.font = font;
+
+    const mergin = radius / 2;
+    const centerX = width / 2;
+    const centerY = height - merginBottom - radius;
+
+    const {
+        width: urlWidth,
+        actualBoundingBoxAscent,
+        actualBoundingBoxDescent,
+    } = ctx.measureText(url);
+    const urlHeight = actualBoundingBoxAscent + actualBoundingBoxDescent;
+    const footerWidth = radius * 2 + mergin + urlWidth;
+    const footerStart = centerX - footerWidth / 2;
+    return {
+        icon: {
+            x: footerStart,
+            y: centerY - radius,
+            radius,
+        },
+        url: {
+            text: url,
+            x: footerStart + radius * 2 + mergin,
+            y: centerY - urlHeight / 2,
+        },
+    };
+};
 
 export const createImage: (text: string) => void = async (text) => {
     // canvas
@@ -58,13 +109,13 @@ export const createImage: (text: string) => void = async (text) => {
     const footerWidth =
         iconRadius * 2 + mergin + ctx.measureText(footerText).width;
     const footerStart = centerX - footerWidth / 2;
-    console.log(
-        ctx.measureText(footerText).width,
-        footerWidth,
-        footerStart,
-        footerStart + iconRadius * 2 + mergin
-    );
     ctx.textAlign = "left";
+
+    console.log(
+        "text",
+        footerStart + iconRadius * 2 + mergin,
+        centerY - textHeight / 2
+    );
     ctx.fillText(
         footerText,
         footerStart + iconRadius * 2 + mergin,
