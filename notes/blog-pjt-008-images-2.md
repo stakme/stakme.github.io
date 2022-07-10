@@ -1,8 +1,10 @@
 ---
-summary: 画像があっちこっちに出せるようになった
+summary: 「og:imageシュッと作るくん」を作った
+og_title: |
+    「og:imageシュッと作るくん」
+    を作った
 tags: [next.js]
-published_at: s
-draft: true
+published_at: 2022-07-10T17:09:49+09:00[Asia/Tokyo]
 ---
 
 ### pjt.init
@@ -23,13 +25,10 @@ draft: true
 ### pjt.exec
 
 -   node-canvasを使う。シュッとApple Siliconに入らないけど[issue](https://github.com/Automattic/node-canvas/issues/1733)を見て解決
-
--   予定通り進んでいるか
--   障害になっていることはないか、取り除くにはどうしたらいいか
--   予想外の事態にどう対応するか
+-   Canvas何もわからなくて丸１日かかってしまった…
+-   画像に書き込む「いい感じに改行されたテキスト」を楽に書くためにパーサーにも手を入れた
 
 ### pjt.close
 
--   すべてのタスクが完了していることを確認
--   学んだことを書き留めておく
--   さらに改善できることをメモ
+-   Canvasおもろい（感想）
+-   現状だと「強制的にog:image設定」されるが、準備済みの画像を入れたいケースが出てきたら改造する

@@ -124,7 +124,7 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
                 <meta name="twitter:description" content={post.summary} />
                 <meta
                     name="twitter:image"
-                    content={`https://stak.me/public/${post.ogImagePath}`}
+                    content={`https://stak.me/${post.ogImagePath}`}
                 />
             </Head>
 
