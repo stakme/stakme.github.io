@@ -1,4 +1,10 @@
-import { createCanvas, registerFont, loadImage, Canvas } from "canvas";
+import {
+    createCanvas,
+    registerFont,
+    loadImage,
+    Canvas,
+    NodeCanvasRenderingContext2DSettings,
+} from "canvas";
 import fs from "fs";
 import { ogBackground, ogTextColor } from "./color";
 
@@ -14,13 +20,21 @@ export interface FooterPosition {
     icon: {
         x: number;
         y: number;
+        centerX: number;
+        centerY: number;
         radius: number;
     };
     url: {
         text: string;
         x: number;
         y: number;
+        width: number;
     };
+}
+
+interface Point {
+    x: number;
+    y: number;
 }
 
 export const footerPosition: (
@@ -51,26 +65,90 @@ export const footerPosition: (
         icon: {
             x: footerStart,
             y: centerY - radius,
+            centerX: footerStart + radius,
+            centerY: centerY,
             radius,
         },
         url: {
             text: url,
             x: footerStart + radius * 2 + mergin,
-            y: centerY - urlHeight / 2,
+            y: Math.floor(centerY - urlHeight / 2),
+            width: urlWidth,
         },
     };
 };
 
+const width = 1200;
+const height = 600;
+const footerHeight = 170;
+const padding = 25;
+
+const background: (canvas: Canvas) => void = (canvas) => {
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = ogBackground;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(
+        padding,
+        padding,
+        canvas.width - padding * 2,
+        canvas.height - padding * 2
+    );
+};
+
+const debug: (canvas: Canvas) => void = (canvas) => {
+    const ctx = canvas.getContext("2d");
+
+    const drawLine: (...points: Point[]) => void = (...points) => {
+        ctx.beginPath();
+        const start = points.shift();
+        if (!start) return;
+
+        ctx.moveTo(start.x, start.y);
+        for (const point of points) {
+            ctx.lineTo(point.x, point.y);
+        }
+        ctx.stroke();
+    };
+    const contentWidth = width - padding * 2;
+    const titleStart: Point = { x: padding, y: padding };
+    const footerStart: Point = {
+        x: padding,
+        y: height - padding - footerHeight,
+    };
+    drawLine({ x: width / 2, y: 0 }, { x: width / 2, y: height });
+    drawLine({ x: 0, y: height / 2 }, { x: width, y: height / 2 });
+    drawLine(
+        titleStart,
+        footerStart,
+        {
+            x: titleStart.x + contentWidth,
+            y: footerStart.y,
+        },
+        {
+            x: titleStart.x + contentWidth,
+            y: titleStart.y,
+        },
+        titleStart
+    );
+    drawLine(
+        footerStart,
+        { x: footerStart.x, y: height - padding },
+        { x: footerStart.x + contentWidth, y: height - padding },
+        { x: padding + contentWidth, y: footerStart.y }
+    );
+};
+
 export const createImage: (text: string) => void = async (text) => {
     // canvas
-    const width = 1200;
-    const height = 600;
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext("2d");
 
     // background
-    ctx.fillStyle = ogBackground;
-    ctx.fillRect(0, 0, width, height);
+    background(canvas);
+
+    debug(canvas);
 
     // text
     const lines = text.split("\n").map((l) => l.trim());
@@ -98,48 +176,26 @@ export const createImage: (text: string) => void = async (text) => {
         ctx.fillText(line, centerX, centerY - textHeight / 2, titleWidth);
     });
 
-    // dev
-    ctx.fillRect(centerX, 0, 1, height);
-
     // footer
     ctx.font = `300 40pt "BIZ UDGothic"`;
-    const footerText = "stak.me";
     const iconRadius = 40;
-    const centerY = height - mergin - footerHeight;
-    const footerWidth =
-        iconRadius * 2 + mergin + ctx.measureText(footerText).width;
-    const footerStart = centerX - footerWidth / 2;
     ctx.textAlign = "left";
+    ctx.textBaseline = "top";
 
-    console.log(
-        "text",
-        footerStart + iconRadius * 2 + mergin,
-        centerY - textHeight / 2
+    const fp = footerPosition(
+        canvas,
+        "stak.me",
+        '300 40pt "BIZ UDGothic',
+        60,
+        40
     );
-    ctx.fillText(
-        footerText,
-        footerStart + iconRadius * 2 + mergin,
-        centerY - textHeight / 2,
-        footerWidth
-    );
+    ctx.fillText(fp.url.text, fp.url.x, fp.url.y, fp.url.width);
     const icon = await loadImage("public/icon/icon.jpg");
 
-    ctx.arc(
-        footerStart + iconRadius,
-        centerY,
-        iconRadius,
-        0,
-        Math.PI * 2,
-        true
-    );
+    ctx.beginPath();
+    ctx.arc(fp.icon.centerX, fp.icon.centerY, iconRadius, 0, Math.PI * 2, true);
     ctx.clip();
-    ctx.drawImage(
-        icon,
-        footerStart,
-        centerY - iconRadius,
-        iconRadius * 2,
-        iconRadius * 2
-    );
+    ctx.drawImage(icon, fp.icon.x, fp.icon.y, iconRadius * 2, iconRadius * 2);
 
     // output
     const buffer = canvas.toBuffer("image/png");

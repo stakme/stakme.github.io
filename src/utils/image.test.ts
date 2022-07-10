@@ -4,14 +4,15 @@ import { FooterPosition, footerPosition } from "./image";
 test("list conversion", () => {
     const expected: FooterPosition = {
         icon: {
-            x: 0,
-            y: 0,
+            x: 456,
+            y: 480,
             radius: 40,
         },
         url: {
             text: "stak.me",
-            x: 566,
-            y: 0,
+            x: 556,
+            y: 500,
+            width: 188,
         },
     };
 
