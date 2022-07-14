@@ -92,11 +92,12 @@ LinkedContent
     / c:[^\]]+ { return {type:"raw", str: c.join("")} }
 
 ImagePart
-    = "![" featured:"@"? alt:[^\]]*  "](" src:[^ )]+ t:(" "+ "\"" [^"]* "\"" )? ")" {
+    = "![" featured:(!"\\" "@")? alt:( "\\@"? [^\]]*)  "](" src:[^ )]+ t:(" "+ "\"" [^"]* "\"" )? ")" {
+        const joinedAlt = [(alt[0] && "@"), ...alt[1]].join("");
         return {
             type: "image",
             featured: !!featured,
-            alt: alt.join(""),
+            alt: joinedAlt,
             src: src.join(""),
             title: t && t[2].join(""),
         }

@@ -8,9 +8,9 @@ interface ParsedPost {
 }
 
 // content
-type ParsedContent = Paragraph | List | Headline | PreformattedText;
+type ParsedContent = RawParagraph | List | Headline | PreformattedText;
 
-interface Paragraph {
+interface RawParagraph {
     type: "paragraph";
     lines: Line[];
 }
@@ -52,6 +52,7 @@ interface CodeLinePart {
 }
 interface ImageLinePart {
     type: "image";
+    featured: boolean;
     alt: string;
     src: string;
     title?: string;

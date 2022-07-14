@@ -1,5 +1,12 @@
 import { ImageDetail } from "../utils/image";
-import { Headline, Line, Paragraph, PreformattedText } from "./parse";
+import {
+    CodeLinePart,
+    Headline,
+    ImageLinePart,
+    LinkLinePart,
+    PreformattedText,
+    RawLinePart,
+} from "./parse";
 
 export type PostID = string;
 export interface Post {
@@ -15,6 +22,17 @@ export interface Post {
 }
 
 export type Content = Paragraph | NestedList | Headline | PreformattedText;
+
+interface Paragraph {
+    type: "paragraph";
+    lines: Line[];
+}
+
+export type Line = LinePart[];
+type LinePart = RawLinePart | CodeLinePart | PostImageLinePart | LinkLinePart;
+interface PostImageLinePart extends ImageLinePart {
+    detail: ImageDetail;
+}
 
 export interface NestedList {
     type: "list";

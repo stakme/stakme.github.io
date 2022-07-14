@@ -38,9 +38,8 @@ const renderLine: (line: Line) => ReactNode = (line) => {
                     title={l.title}
                     objectFit="contain"
                     layout="responsive"
-                    // TODO: そのうちなんとかする
-                    height="514"
-                    width="948"
+                    height={l.detail.height}
+                    width={l.detail.width}
                 />
             );
         }

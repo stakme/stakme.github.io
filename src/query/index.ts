@@ -18,9 +18,36 @@ async function postByID(): Promise<PostObject> {
                 continue;
             }
 
+            // TODO: コードが汚くてびっくりしちゃった
             const id = name.replace(/\.md$/, "");
+            let featuredImagePath = "";
+            const contents = post.contents.map((content) => {
+                if (content.type === "list") {
+                    return convertList(content);
+                }
+                if (content.type === "paragraph") {
+                    return {
+                        ...content,
+                        lines: content.lines.map((ll) =>
+                            ll.map((line) => {
+                                if (line.type !== "image") {
+                                    return line;
+                                }
+                                const src = `/posts/${id}/${line.src}`;
+                                const detail = getImageDetail(src);
+                                if (line.featured) {
+                                    featuredImagePath = src;
+                                }
+                                return { ...line, src, detail };
+                            })
+                        ),
+                    };
+                }
+                return content;
+            });
             const ogTitle = post.og_title ?? post.title;
-            const ogImagePath = await getOGImagePath(id, ogTitle);
+            const ogImagePath =
+                featuredImagePath || (await getOGImagePath(id, ogTitle));
             postByID[id] = {
                 ...post,
                 id,
@@ -28,13 +55,8 @@ async function postByID(): Promise<PostObject> {
                     .epochSeconds,
                 og_title: ogTitle,
                 og_image: getImageDetail(ogImagePath),
-                card_type: "image",
-                contents: post.contents.map((content) => {
-                    if (content.type === "list") {
-                        return convertList(content);
-                    }
-                    return content;
-                }),
+                card_type: featuredImagePath ? "image" : "text",
+                contents,
             };
         } catch (e) {
             console.error(name, e);
@@ -52,5 +74,4 @@ export async function getAllPosts(): Promise<Post[]> {
     return Object.entries(await postByID()).map(([k, v]) => v);
 }
 
-export type { Post, PostID, Content } from "./type";
-export type { Line } from "./parse";
+export type { Post, PostID, Content, Line } from "./type";

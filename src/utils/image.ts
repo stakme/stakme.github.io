@@ -8,5 +8,9 @@ export interface ImageDetail {
 
 export const getImageDetail: (path: string) => ImageDetail = (path) => {
     const { width, height } = imageSize(`./public/${path}`);
-    return { path, width: width ?? 0, height: height ?? 0 };
+    return {
+        path,
+        width: width ?? 0,
+        height: height ?? 0,
+    };
 };

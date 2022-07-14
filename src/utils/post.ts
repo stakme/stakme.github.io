@@ -1,5 +1,5 @@
 import { Content } from "../query";
-import { LinePart, ListItem } from "../query/parse";
+import { LinePart } from "../query/parse";
 import { NestedListItem } from "../query/type";
 
 const separator = " ";
@@ -53,3 +53,5 @@ export const getContentsString: (contents: Content[]) => string = (
     }
     return strings.join(separator);
 };
+
+// export const getFeaturedImage(contents: Content[]) =>
