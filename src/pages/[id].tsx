@@ -13,7 +13,7 @@ const renderLine: (line: Line) => ReactNode = (line) => {
         }
         if (l.type === "code") {
             return (
-                <code className="bg-orange-100 p-1 mx-1" key={i}>
+                <code className="mx-1 bg-orange-100 p-1" key={i}>
                     {l.str}
                 </code>
             );
@@ -68,14 +68,14 @@ const renderListItems: (list: NestedList) => ReactNode = (list) => {
 const renderList: (list: NestedList) => ReactNode = (list) => {
     if (list.order === "ordered") {
         return (
-            <ol className="list-decimal list-inside" key={list.depth}>
+            <ol className="list-inside list-decimal" key={list.depth}>
                 {renderListItems(list)}
             </ol>
         );
     }
     if (list.order === "unordered") {
         return (
-            <ul className="list-disc list-inside" key={list.depth}>
+            <ul className="list-inside list-disc" key={list.depth}>
                 {renderListItems(list)}
             </ul>
         );
@@ -102,7 +102,7 @@ const renderContent: (content: Content, index: number) => ReactNode = (
     }
     if (content.type === "pre") {
         return (
-            <pre key={i} className="overflow-auto bg-stone-100 p-6 m-4">
+            <pre key={i} className="m-4 overflow-auto bg-stone-100 p-6">
                 {content.lines.join("\n")}
             </pre>
         );
@@ -112,7 +112,7 @@ const renderContent: (content: Content, index: number) => ReactNode = (
 
 const Blog: FC<{ post: Post }> = ({ post }) => {
     return (
-        <main className="p-4 container mx-auto">
+        <main className="container mx-auto p-4">
             <Head>
                 <title>大丈夫になりたい | {post.summary}</title>
                 <meta name="twitter:card" content="summary_large_image" />
@@ -124,7 +124,7 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
                 <meta name="twitter:description" content={post.summary} />
                 <meta
                     name="twitter:image"
-                    content={`https://stak.me/${post.ogImagePath}`}
+                    content={`https://stak.me/${post.og_image.path}`}
                 />
             </Head>
 

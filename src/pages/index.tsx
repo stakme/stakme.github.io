@@ -1,16 +1,43 @@
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import Head from "next/head";
-import Link from "next/link";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { getAllPosts, Post } from "../query";
 import { TextLink } from "../components/link";
+import { ImageDetail } from "../utils/image";
 
-const page: FC<{ posts: Post[] }> = ({ posts }) => {
+interface PostSummary {
+    id: string;
+    summary: string;
+    published_at: string;
+    og_image: ImageDetail;
+    tags: string;
+}
+
+const Header: FC = () => {
+    return (
+        <header className="mb-8 grid auto-cols-min grid-cols-1 gap-y-4 md:grid-cols-2">
+            <div>
+                <h1
+                    className="text-6xl
+
+                font-bold lg:text-8xl"
+                >
+                    @stakme
+                </h1>
+            </div>
+            <div className="flex items-end justify-end gap-x-2">
+                <TextLink href="https://twitter.com/stakme">Twitter</TextLink>
+                <TextLink href="https://github.com/stakme">GitHub</TextLink>
+            </div>
+        </header>
+    );
+};
+
+const page: FC<{ posts: PostSummary[] }> = ({ posts }) => {
     return (
         <div>
             <Head>
                 <title>@stakme | 大丈夫になりたい</title>
-
                 <meta name="twitter:card" content="summary" />
                 <meta name="twitter:site" content="@stakme" />
                 <meta
@@ -19,24 +46,22 @@ const page: FC<{ posts: Post[] }> = ({ posts }) => {
                 />
                 <meta
                     name="twitter:description"
-                    content="TODO: ここのテキスト後でなんとかする"
+                    content="インターネットに関連する何かが置いてあるブログ"
                 />
             </Head>
 
-            <main className="m-8">
-                <h1 className="text-xl font-bold ">@stakme</h1>
-                <h2>大丈夫になりたい</h2>
-                <ul className="mt-8">
-                    {posts.map((p) => (
-                        <li key={p.id} className="mt-2">
-                            <TextLink href={`/${encodeURIComponent(p.id)}`}>
-                                [{p.published_at}] {p.id}
-                                <br />
-                                {p.summary}
+            <main className="container mx-auto 2xl:px-80">
+                <Header />
+                <div className="grid-col-1 grid gap-4">
+                    {posts.map((post) => (
+                        <section key={post.id}>
+                            <TextLink href={`/${encodeURIComponent(post.id)}`}>
+                                {post.summary}
                             </TextLink>
-                        </li>
+                            <div>{post.tags}</div>
+                        </section>
                     ))}
-                </ul>
+                </div>
                 <div className="pt-8">
                     <p>
                         このサイトはGoogleアナリティクスを利用し、お使いのウェブブラウザから特定の情報を収集します。
@@ -54,9 +79,15 @@ const page: FC<{ posts: Post[] }> = ({ posts }) => {
 };
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-    const posts = (await getAllPosts()).sort(
-        (a, b) => a.timestamp - b.timestamp
-    );
+    const posts: PostSummary[] = (await getAllPosts())
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .map(({ id, summary, published_at, og_image, tags, ..._ }) => ({
+            id,
+            summary,
+            published_at,
+            og_image,
+            tags,
+        }));
     return { props: { posts } };
 };
 

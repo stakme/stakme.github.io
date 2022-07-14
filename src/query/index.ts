@@ -3,7 +3,8 @@ import { parse } from "./parse";
 import { Temporal } from "@js-temporal/polyfill";
 import { convertList } from "./convert";
 import { Post, PostID } from "./type";
-import { getOGImagePath } from "../utils/image";
+import { getOGImagePath } from "../utils/og_image";
+import { getImageDetail } from "../utils/image";
 
 type PostObject = { [key: PostID]: Post };
 
@@ -25,8 +26,8 @@ async function postByID(): Promise<PostObject> {
                 id,
                 timestamp: Temporal.ZonedDateTime.from(post.published_at)
                     .epochSeconds,
-                ogTitle,
-                ogImagePath,
+                og_title: ogTitle,
+                og_image: getImageDetail(ogImagePath),
                 contents: post.contents.map((content) => {
                     if (content.type === "list") {
                         return convertList(content);

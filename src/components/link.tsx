@@ -7,7 +7,7 @@ export const TextLink: FC<{ href: string; children: ReactNode }> = ({
 }) => {
     return (
         <Link href={href}>
-            <a className="text-sky-600 hover:text-sky-700 focus:text-sky-800 visited:text-sky-900 underline underline-offset-2">
+            <a className="text-sky-600 underline underline-offset-2 visited:text-sky-900 hover:text-sky-700 focus:text-sky-800">
                 {children}
             </a>
         </Link>
