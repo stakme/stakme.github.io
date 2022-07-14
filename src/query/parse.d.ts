@@ -1,5 +1,5 @@
 interface ParsedPost {
-    summary: string;
+    title: string;
     tags: string;
     published_at: string;
     og_title?: string;
@@ -8,7 +8,8 @@ interface ParsedPost {
 }
 
 // content
-type ParsedContent = Paragraph | List | PreformattedText;
+type ParsedContent = Paragraph | List | Headline | PreformattedText;
+
 interface Paragraph {
     type: "paragraph";
     lines: Line[];
@@ -31,6 +32,13 @@ interface ListItem {
     line: Line;
 }
 
+// headline
+interface Headline {
+    type: "headline";
+    depth: number;
+    items: Line;
+}
+
 // line
 type Line = LinePart[];
 type LinePart = RawLinePart | CodeLinePart | ImageLinePart | LinkLinePart;
@@ -50,7 +58,7 @@ interface ImageLinePart {
 }
 interface LinkLinePart {
     type: "link";
-    content: string;
+    contents: (RawLinePart | CodeLinePart)[];
     href: string;
 }
 

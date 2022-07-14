@@ -1,19 +1,20 @@
 import { ImageDetail } from "../utils/image";
-import { Line, Paragraph, PreformattedText } from "./parse";
+import { Headline, Line, Paragraph, PreformattedText } from "./parse";
 
 export type PostID = string;
 export interface Post {
     id: PostID;
-    summary: string;
+    title: string;
     og_title: string;
     og_image: ImageDetail;
+    card_type: "text" | "image";
     tags: string;
     published_at: string;
     contents: Content[];
     timestamp: number;
 }
 
-export type Content = Paragraph | NestedList | PreformattedText;
+export type Content = Paragraph | NestedList | Headline | PreformattedText;
 
 export interface NestedList {
     type: "list";

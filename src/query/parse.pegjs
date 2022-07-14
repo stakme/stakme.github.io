@@ -5,6 +5,7 @@ Contents = Content*
 Content
     = PreformattedText
     / List
+    / Headline
     / Paragraph
 
 // header
@@ -12,7 +13,8 @@ Header
     = HeaderSeparator cs:HeaderContent* HeaderSeparator { return cs.reduce((p, v) => { p[v[0]] = v[1]; return p }, {}) }
 HeaderSeparator = "---"_+
 HeaderKey
-    = "summary"
+    = "summary" {return "title"}
+    / "title"
     / "tags"
     / "og_title"
     / "published_at"
@@ -22,6 +24,10 @@ HeaderContent
     / key:HeaderKey ": " value:Str [\n] { return [key, value] }
 HeaderMultiLine
     = '    ' value:Str _ { return value }
+
+// headline
+Headline
+    = tag:"#"+ Space+ l:Line { return { type: "headline", depth: tag.length, items: l} }
 
 // paragraph
 Paragraph
@@ -79,18 +85,27 @@ CodePartChar3
     / "`" !"``" { return "`" }
 
 LinkPart
-    = "[" c:[^\]]* "](" l:[^)]* ")" { return { type: "link", content: c.join(""), href: l.join("") } }
+    = "[" cs:LinkedContent* "](" l:[^)]* ")" { return { type: "link", contents: cs, href: l.join("") } }
     / "[" { return {type: "raw", str: "[" } }
+LinkedContent
+    = CodePart
+    / c:[^\]]+ { return {type:"raw", str: c.join("")} }
 
 ImagePart
-    = "![" c:[^\]]* "](" l:[^) ]* Space "\"" t:[^"]* "\")" { return { type: "image", alt: c.join(""), src: l.join(""), title: t.join("") } }
-    / "![" c:[^\]]* "](" l:[^)]* ")" { return { type: "image", alt: c.join(""), src: l.join("") } }
-    / "!" { return {type: "raw", str: "!" } }
+    = "![" featured:"@"? alt:[^\]]*  "](" src:[^ )]+ t:(" "+ "\"" [^"]* "\"" )? ")" {
+        return {
+            type: "image",
+            featured: !!featured,
+            alt: alt.join(""),
+            src: src.join(""),
+            title: t && t[2].join(""),
+        }
+    }
 
 RawPart
     = cs:RawPartChar+ { return {type: "raw", str: cs.join("")} }
 RawPartChar
-    = [^!`[\n]
+    = [^`[\n]
 
 // base
 Str
@@ -101,4 +116,5 @@ NestSpace
     = "    "
 _ "newline"
     = [\r] ? [\n]
+
 

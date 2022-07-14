@@ -19,7 +19,7 @@ async function postByID(): Promise<PostObject> {
             }
 
             const id = name.replace(/\.md$/, "");
-            const ogTitle = post.og_title ?? post.summary;
+            const ogTitle = post.og_title ?? post.title;
             const ogImagePath = await getOGImagePath(id, ogTitle);
             postByID[id] = {
                 ...post,
@@ -28,6 +28,7 @@ async function postByID(): Promise<PostObject> {
                     .epochSeconds,
                 og_title: ogTitle,
                 og_image: getImageDetail(ogImagePath),
+                card_type: "image",
                 contents: post.contents.map((content) => {
                     if (content.type === "list") {
                         return convertList(content);

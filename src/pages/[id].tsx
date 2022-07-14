@@ -5,6 +5,10 @@ import Image from "next/image";
 import { getPost, getAllPosts, Line, Content, Post, PostID } from "../query";
 import { TextLink } from "../components/link";
 import { NestedList } from "../query/type";
+import { getContentsString } from "../utils/post";
+import { MainContainer } from "../components/container";
+import { Header } from "../components/header";
+import { Headline } from "../components/headline";
 
 const renderLine: (line: Line) => ReactNode = (line) => {
     return line.map((l, i) => {
@@ -21,7 +25,7 @@ const renderLine: (line: Line) => ReactNode = (line) => {
         if (l.type === "link") {
             return (
                 <TextLink href={l.href} key={i}>
-                    {l.content}
+                    {renderLine(l.contents)}
                 </TextLink>
             );
         }
@@ -87,11 +91,7 @@ const renderContent: (content: Content, index: number) => ReactNode = (
     i
 ) => {
     if (content.type === "paragraph") {
-        return (
-            <p key={i}>
-                {content.lines.map((line) => renderLine(line)).flat()}
-            </p>
-        );
+        return <p key={i}>{content.lines.map(renderLine).flat()}</p>;
     }
     if (content.type === "list") {
         return (
@@ -107,27 +107,38 @@ const renderContent: (content: Content, index: number) => ReactNode = (
             </pre>
         );
     }
+    if (content.type === "headline") {
+        return (
+            <Headline depth={content.depth}>
+                {renderLine(content.items)}
+            </Headline>
+        );
+    }
     return <span key={i}></span>;
 };
 
 const Blog: FC<{ post: Post }> = ({ post }) => {
     return (
-        <main className="container mx-auto p-4">
+        <MainContainer>
             <Head>
-                <title>大丈夫になりたい | {post.summary}</title>
+                <title>大丈夫になりたい | {post.title}</title>
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:site" content="@stakme" />
                 <meta
                     name="twitter:title"
                     content="@stakme | 大丈夫になりたい"
                 />
-                <meta name="twitter:description" content={post.summary} />
+                <meta
+                    name="twitter:description"
+                    content={getContentsString(post.contents)}
+                />
                 <meta
                     name="twitter:image"
                     content={`https://stak.me/${post.og_image.path}`}
                 />
             </Head>
 
+            <Header />
             <TextLink href="/">top</TextLink>
             <article>
                 <div style={{ marginBottom: "1em", color: "gray" }}>
@@ -135,12 +146,12 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
                 </div>
                 {post.contents.map((content, i) => renderContent(content, i))}
             </article>
-        </main>
+        </MainContainer>
     );
 };
 
 export const getStaticProps: GetStaticProps<{ id: string }> = async (ctx) => {
-    const postID = ctx.params!.id as PostID;
+    const postID = ctx.params?.id as PostID;
     const post = await getPost(postID);
     return {
         props: {

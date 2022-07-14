@@ -1,41 +1,27 @@
 import { FC } from "react";
 import Head from "next/head";
-import { GetStaticProps, GetStaticPaths } from "next";
-import { getAllPosts, Post } from "../query";
+import { GetStaticProps } from "next";
+import { getAllPosts } from "../query";
 import { TextLink } from "../components/link";
 import { ImageDetail } from "../utils/image";
+import { MainContainer } from "../components/container";
+import { getContentsString } from "../utils/post";
+import { Header } from "../components/header";
+import Image from "next/image";
 
 interface PostSummary {
     id: string;
+    title: string;
     summary: string;
     published_at: string;
     og_image: ImageDetail;
+    card_type: "text" | "image";
     tags: string;
 }
 
-const Header: FC = () => {
-    return (
-        <header className="mb-8 grid auto-cols-min gap-y-4 md:grid-cols-2">
-            <div>
-                <h1
-                    className="text-6xl
-
-                font-bold lg:text-8xl"
-                >
-                    @stakme
-                </h1>
-            </div>
-            <div className="flex items-end justify-end gap-x-2">
-                <TextLink href="https://twitter.com/stakme">Twitter</TextLink>
-                <TextLink href="https://github.com/stakme">GitHub</TextLink>
-            </div>
-        </header>
-    );
-};
-
 const page: FC<{ posts: PostSummary[] }> = ({ posts }) => {
     return (
-        <div>
+        <MainContainer>
             <Head>
                 <title>@stakme | 大丈夫になりたい</title>
                 <meta name="twitter:card" content="summary" />
@@ -50,23 +36,35 @@ const page: FC<{ posts: PostSummary[] }> = ({ posts }) => {
                 />
             </Head>
 
-            <main className="container mx-auto 2xl:px-80">
+            <main>
                 <Header />
                 <div className="grid gap-4">
                     {posts.map((post) => (
-                        <section key={post.id}>
-                            <TextLink href={`/${encodeURIComponent(post.id)}`}>
-                                {post.summary}
-                            </TextLink>
-                            <div>{post.tags}</div>
+                        <section key={post.id} className="rounded-md border-2">
+                            {post.card_type === "image" && (
+                                <Image
+                                    className="rounded-t-md"
+                                    src={post.og_image.path}
+                                    width={post.og_image.width}
+                                    height={post.og_image.height}
+                                    alt={post.title}
+                                />
+                            )}
+                            <div className="p-4">
+                                <TextLink
+                                    href={`/${encodeURIComponent(post.id)}`}
+                                >
+                                    <h2 className="text-lg">{post.title}</h2>
+                                </TextLink>
+                                <div className="my-1">{post.summary}</div>
+                                <div>{post.tags}</div>
+                            </div>
                         </section>
                     ))}
                 </div>
                 <div className="pt-8">
                     <p>
                         このサイトはGoogleアナリティクスを利用し、お使いのウェブブラウザから特定の情報を収集します。
-                    </p>
-                    <p>
                         <TextLink href="https://policies.google.com/technologies/partner-sites">
                             データが収集、処理される仕組みについて
                             (Google提供サイト)
@@ -74,20 +72,38 @@ const page: FC<{ posts: PostSummary[] }> = ({ posts }) => {
                     </p>
                 </div>
             </main>
-        </div>
+        </MainContainer>
     );
 };
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const posts: PostSummary[] = (await getAllPosts())
         .sort((a, b) => b.timestamp - a.timestamp)
-        .map(({ id, summary, published_at, og_image, tags, ..._ }) => ({
-            id,
-            summary,
-            published_at,
-            og_image,
-            tags,
-        }));
+        .map(
+            ({
+                id,
+                title,
+                published_at,
+                og_image,
+                tags,
+                contents,
+                card_type,
+            }) => {
+                let summary = getContentsString(contents);
+                if (summary.length > 80) {
+                    summary = summary.slice(0, 80) + "……";
+                }
+                return {
+                    id,
+                    title,
+                    summary,
+                    published_at,
+                    og_image,
+                    card_type,
+                    tags,
+                };
+            }
+        );
     return { props: { posts } };
 };
 
