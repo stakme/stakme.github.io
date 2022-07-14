@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import { FC } from "react";
 import Head from "next/head";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { getAllPosts, Post } from "../query";
@@ -15,7 +15,7 @@ interface PostSummary {
 
 const Header: FC = () => {
     return (
-        <header className="mb-8 grid auto-cols-min grid-cols-1 gap-y-4 md:grid-cols-2">
+        <header className="mb-8 grid auto-cols-min gap-y-4 md:grid-cols-2">
             <div>
                 <h1
                     className="text-6xl
@@ -52,7 +52,7 @@ const page: FC<{ posts: PostSummary[] }> = ({ posts }) => {
 
             <main className="container mx-auto 2xl:px-80">
                 <Header />
-                <div className="grid-col-1 grid gap-4">
+                <div className="grid gap-4">
                     {posts.map((post) => (
                         <section key={post.id}>
                             <TextLink href={`/${encodeURIComponent(post.id)}`}>
