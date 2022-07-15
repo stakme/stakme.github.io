@@ -6,7 +6,7 @@ module.exports = {
         fontFamily: {
             sans: ['"M PLUS Rounded 1c"'],
             serif: ['"M PLUS Rounded 1c"'],
-            mono: [],
+            mono: ["Roboto Mono"],
             display: [],
             body: [],
         },

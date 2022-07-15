@@ -8,6 +8,7 @@ import { MainContainer } from "../components/container";
 import { getContentsString } from "../utils/post";
 import { Header } from "../components/header";
 import Image from "next/image";
+import Link from "next/link";
 
 interface PostSummary {
     id: string;
@@ -40,25 +41,38 @@ const page: FC<{ posts: PostSummary[] }> = ({ posts }) => {
                 <Header />
                 <div className="grid gap-4">
                     {posts.map((post) => (
-                        <section key={post.id} className="rounded-md border-2">
-                            {post.card_type === "image" && (
-                                <Image
-                                    className="rounded-t-md"
-                                    src={post.og_image.path}
-                                    width={post.og_image.width}
-                                    height={post.og_image.height}
-                                    alt={post.title}
-                                />
-                            )}
-                            <div className="p-4">
-                                <TextLink
-                                    href={`/${encodeURIComponent(post.id)}`}
-                                >
-                                    <h2 className="text-lg">{post.title}</h2>
-                                </TextLink>
-                                <div className="my-1">{post.summary}</div>
-                                <div>{post.tags}</div>
-                            </div>
+                        <section
+                            key={post.id}
+                            className="flex flex-col rounded-xl border"
+                        >
+                            <Link href={`/${encodeURIComponent(post.id)}`}>
+                                <a>
+                                    {post.card_type === "image" && (
+                                        <Image
+                                            className="rounded-t-xl"
+                                            src={post.og_image.path}
+                                            width={post.og_image.width}
+                                            height={post.og_image.height}
+                                            alt={post.title}
+                                        />
+                                    )}
+                                    <div className="p-4">
+                                        <TextLink
+                                            href={`/${encodeURIComponent(
+                                                post.id
+                                            )}`}
+                                        >
+                                            <h2 className="text-lg">
+                                                {post.title}
+                                            </h2>
+                                        </TextLink>
+                                        <div className="my-1">
+                                            {post.summary}
+                                        </div>
+                                        <div>{post.tags}</div>
+                                    </div>
+                                </a>
+                            </Link>
                         </section>
                     ))}
                 </div>

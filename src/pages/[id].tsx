@@ -31,16 +31,19 @@ const renderLine: (line: Line) => ReactNode = (line) => {
         }
         if (l.type === "image") {
             return (
-                <Image
-                    key={i}
-                    src={l.src}
-                    alt={l.alt}
-                    title={l.title}
-                    objectFit="contain"
-                    layout="responsive"
-                    height={l.detail.height}
-                    width={l.detail.width}
-                />
+                <div className="flex flex-col rounded-xl border" key={i}>
+                    <Image
+                        className="rounded-t-xl"
+                        key={i}
+                        src={l.src}
+                        alt={l.alt}
+                        title={l.title}
+                        objectFit="contain"
+                        height={l.detail.height}
+                        width={l.detail.width}
+                    />
+                    <div className="p-2 text-sm text-gray-500">{l.title}</div>
+                </div>
             );
         }
     });
@@ -90,7 +93,7 @@ const renderContent: (content: Content, index: number) => ReactNode = (
     i
 ) => {
     if (content.type === "paragraph") {
-        return <p key={i}>{content.lines.map(renderLine).flat()}</p>;
+        return <div key={i}>{content.lines.map(renderLine).flat()}</div>;
     }
     if (content.type === "list") {
         return (
@@ -108,7 +111,7 @@ const renderContent: (content: Content, index: number) => ReactNode = (
     }
     if (content.type === "headline") {
         return (
-            <Headline depth={content.depth}>
+            <Headline key={i} depth={content.depth}>
                 {renderLine(content.items)}
             </Headline>
         );
@@ -138,9 +141,13 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
             </Head>
 
             <Header />
-            <TextLink href="/">top</TextLink>
             <article>
-                <div style={{ marginBottom: "1em", color: "gray" }}>
+                {post.title ? (
+                    <Headline depth={2}>{post.title}</Headline>
+                ) : (
+                    <></>
+                )}
+                <div className="py-2 text-right text-gray-500">
                     {post.published_at}
                 </div>
                 {post.contents.map((content, i) => renderContent(content, i))}

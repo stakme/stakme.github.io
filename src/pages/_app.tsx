@@ -40,7 +40,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
                     gtag('js', new Date());
                     gtag('config', '${GA_MEASUREMENT_ID}');
                 `}</Script>
-            <Component {...pageProps} />;
+            <Component {...pageProps} />
         </>
     );
 };

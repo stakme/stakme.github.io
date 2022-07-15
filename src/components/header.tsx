@@ -1,11 +1,12 @@
 import { FC } from "react";
+import { Headline } from "./headline";
 import { TextLink } from "./link";
 
 export const Header: FC = () => (
     <header>
         <div className="mb-8 gap-y-4 md:flex">
             <div>
-                <h1 className="mr-2 text-7xl font-bold">@stakme</h1>
+                <Headline depth={1}>@stakme</Headline>
             </div>
             <div className="flex grow flex-row-reverse items-end gap-x-2">
                 <TextLink href="http://github.com/stakme/stakme.github.io">
