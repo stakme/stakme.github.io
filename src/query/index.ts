@@ -2,7 +2,7 @@ import fs from "fs";
 import { parse } from "./parse";
 import { Temporal } from "@js-temporal/polyfill";
 import { convertList, convertParagraph } from "./convert";
-import { ImageLinePart, Paragraph, Post, PostID } from "./type";
+import { Post, PostID } from "./type";
 import { getOGImagePath } from "../utils/og_image";
 import { getImageDetail } from "../utils/image";
 
@@ -18,28 +18,25 @@ async function postByID(): Promise<PostObject> {
                 continue;
             }
 
-            // TODO: コードが汚くてびっくりしちゃった
             const id = name.replace(/\.md$/, "");
-            const paragraphs: Paragraph[] = [];
+            let featuredImagePath = "";
             const contents = post.contents.map((content) => {
                 if (content.type === "list") {
                     return convertList(id, content);
                 }
                 if (content.type === "paragraph") {
                     const paragraph = convertParagraph(id, content);
-                    paragraphs.push(paragraph);
+                    if (!featuredImagePath) {
+                        for (const l of paragraph.lines.flat()) {
+                            if (l.type === "image" && l.featured) {
+                                featuredImagePath = l.src;
+                            }
+                        }
+                    }
                     return paragraph;
                 }
-
                 return content;
             });
-            const featuredImagePath = paragraphs
-                .flatMap((p) => p.lines)
-                .flat()
-                .filter(
-                    (l): l is ImageLinePart => l.type === "image" && l.featured
-                )
-                .map((i) => i.src)[0];
             const ogTitle = post.og_title ?? post.title;
             const ogImagePath =
                 featuredImagePath || (await getOGImagePath(id, ogTitle));

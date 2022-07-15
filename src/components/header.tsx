@@ -7,11 +7,12 @@ export const Header: FC = () => (
             <div>
                 <h1 className="mr-2 text-7xl font-bold">@stakme</h1>
             </div>
-            <div className="flex grow flex-row-reverse items-end gap-x-2 ">
+            <div className="flex grow flex-row-reverse items-end gap-x-2">
                 <TextLink href="http://github.com/stakme/stakme.github.io">
                     GitHub
                 </TextLink>
                 <TextLink href="https://twitter.com/stakme">Twitter</TextLink>
+                <TextLink href="/">top</TextLink>
             </div>
         </div>
         <div className="mb-4">大丈夫になりたいブログ</div>
