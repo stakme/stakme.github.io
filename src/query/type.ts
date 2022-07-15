@@ -1,13 +1,5 @@
 import { ImageDetail } from "../utils/image";
-import {
-    CodeLinePart,
-    Headline,
-    LinkLinePart,
-    MDHeadline,
-    MDImageLinePart,
-    PreformattedText,
-    RawLinePart,
-} from "./parse";
+import { Headline, MDImage, MDLine, PreformattedText } from "./parse";
 
 export type PostID = string;
 export interface Post {
@@ -22,17 +14,20 @@ export interface Post {
     timestamp: number;
 }
 
-export type Content = Paragraph | NestedList | Headline | PreformattedText;
+export type Content =
+    | Paragraph
+    | NestedList
+    | Headline
+    | Image
+    | PreformattedText;
+
+export interface Image extends MDImage {
+    detail: ImageDetail;
+}
 
 export interface Paragraph {
     type: "paragraph";
-    lines: Line[];
-}
-
-export type Line = LinePart[];
-type LinePart = RawLinePart | CodeLinePart | ImageLinePart | LinkLinePart;
-export interface ImageLinePart extends MDImageLinePart {
-    detail: ImageDetail;
+    lines: MDLine[];
 }
 
 export interface NestedList {
@@ -42,6 +37,6 @@ export interface NestedList {
     items: NestedListItem[];
 }
 export interface NestedListItem {
-    line: Line;
+    line: MDLine;
     child?: NestedList;
 }

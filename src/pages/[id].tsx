@@ -29,31 +29,6 @@ const renderLine: (line: Line) => ReactNode = (line) => {
                 </TextLink>
             );
         }
-        if (l.type === "image") {
-            return (
-                <div className="flex justify-center">
-                    <div
-                        className="flex max-w-xl flex-col rounded-xl border"
-                        key={i}
-                    >
-                        <Image
-                            className="rounded-t-xl "
-                            key={i}
-                            src={l.src}
-                            alt={l.alt}
-                            title={l.title}
-                            objectFit="contain"
-                            height={l.detail.height}
-                            width={l.detail.width}
-                        />
-
-                        <div className="p-3 text-sm text-gray-500">
-                            {l.title}
-                        </div>
-                    </div>
-                </div>
-            );
-        }
     });
 };
 
@@ -111,6 +86,31 @@ const renderContent: (content: Content, index: number) => ReactNode = (
             <pre key={i} className="overflow-auto bg-stone-100 p-6">
                 {content.lines.join("\n")}
             </pre>
+        );
+    }
+    if (content.type === "image") {
+        return (
+            <div className="flex justify-center">
+                <div
+                    className="flex max-w-xl flex-col rounded-xl border"
+                    key={i}
+                >
+                    <Image
+                        className="rounded-t-xl "
+                        key={i}
+                        src={content.src}
+                        alt={content.alt}
+                        title={content.title}
+                        objectFit="contain"
+                        height={content.detail.height}
+                        width={content.detail.width}
+                    />
+
+                    <div className="p-3 text-sm text-gray-500">
+                        {content.title}
+                    </div>
+                </div>
+            </div>
         );
     }
     if (content.type === "headline") {

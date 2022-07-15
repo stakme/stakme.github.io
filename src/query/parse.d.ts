@@ -8,7 +8,7 @@ interface ParsedPost {
 }
 
 // content
-type ParsedContent = MDParagraph | List | Headline | PreformattedText;
+type ParsedContent = MDParagraph | List | Headline | MDImage | PreformattedText;
 
 interface MDParagraph {
     type: "paragraph";
@@ -39,9 +39,18 @@ interface Headline {
     items: (RawLinePart | CodeLinePart | LinkLinePart)[];
 }
 
+// image
+interface MDImage {
+    type: "image";
+    featured: boolean;
+    alt: string;
+    src: string;
+    title?: string;
+}
+
 // line
 export type MDLine = MDLinePart[];
-type MDLinePart = RawLinePart | CodeLinePart | MDImageLinePart | LinkLinePart;
+type MDLinePart = RawLinePart | CodeLinePart | LinkLinePart;
 interface RawLinePart {
     type: "raw";
     str: string;
@@ -49,13 +58,6 @@ interface RawLinePart {
 interface CodeLinePart {
     type: "code";
     str: string;
-}
-interface MDImageLinePart {
-    type: "image";
-    featured: boolean;
-    alt: string;
-    src: string;
-    title?: string;
 }
 interface LinkLinePart {
     type: "link";

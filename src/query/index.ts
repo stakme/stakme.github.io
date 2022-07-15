@@ -1,7 +1,7 @@
 import fs from "fs";
 import { parse } from "./parse";
 import { Temporal } from "@js-temporal/polyfill";
-import { convertList, convertParagraph } from "./convert";
+import { convertImage, convertList } from "./convert";
 import { Post, PostID } from "./type";
 import { getOGImagePath } from "../utils/og_image";
 import { getImageDetail } from "../utils/image";
@@ -22,18 +22,14 @@ async function postByID(): Promise<PostObject> {
             let featuredImagePath = "";
             const contents = post.contents.map((content) => {
                 if (content.type === "list") {
-                    return convertList(id, content);
+                    return convertList(content);
                 }
-                if (content.type === "paragraph") {
-                    const paragraph = convertParagraph(id, content);
-                    if (!featuredImagePath) {
-                        for (const l of paragraph.lines.flat()) {
-                            if (l.type === "image" && l.featured) {
-                                featuredImagePath = l.src;
-                            }
-                        }
+                if (content.type === "image") {
+                    const img = convertImage(id, content);
+                    if (!featuredImagePath && img.featured) {
+                        featuredImagePath = img.src;
                     }
-                    return paragraph;
+                    return img;
                 }
                 return content;
             });
@@ -66,4 +62,5 @@ export async function getAllPosts(): Promise<Post[]> {
     return Object.entries(await postByID()).map(([k, v]) => v);
 }
 
-export type { Post, PostID, Content, Line } from "./type";
+export type { Post, PostID, Content } from "./type";
+export type { MDLine as Line } from "./parse";
