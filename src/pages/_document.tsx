@@ -2,21 +2,22 @@ import { DocumentProps, Html, Main, NextScript, Head } from "next/document";
 import { FC } from "react";
 
 const MyDocument: FC<DocumentProps> = () => {
+    const googleFonts = [
+        "M+PLUS+Rounded+1c:wght@300",
+        "BIZ+UDGothic",
+        "Roboto:wght@400",
+        "Roboto+Mono",
+    ];
     return (
         <Html>
             <Head>
-                <link
-                    href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300&display=optional"
-                    rel="stylesheet"
-                />
-                <link
-                    href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap"
-                    rel="stylesheet"
-                />
-                <link
-                    href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic&display=swap"
-                    rel="stylesheet"
-                />
+                {googleFonts.map((font, i) => (
+                    <link
+                        key={i}
+                        href={`https://fonts.googleapis.com/css2?family=${font}&display=swap`}
+                        rel="stylesheet"
+                    />
+                ))}
             </Head>
             <body>
                 <Main />
