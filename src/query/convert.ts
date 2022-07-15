@@ -1,7 +1,8 @@
-import { List } from "./parse";
-import { NestedList, NestedListItem } from "./type";
+import { getImageDetail } from "../utils/image";
+import { List, MDImage } from "./parse";
+import { Image, NestedList, NestedListItem } from "./type";
 
-export const convertList: (list: List) => NestedList = (list) => {
+export const convertList = (list: List): NestedList => {
     const result: NestedList = {
         type: "list",
         order: list.items[0].type,
@@ -32,4 +33,10 @@ export const convertList: (list: List) => NestedList = (list) => {
         parentByDepth[depth].push({ line: item.line });
     }
     return result;
+};
+
+export const convertImage: (id: string, img: MDImage) => Image = (id, img) => {
+    const src = `/posts/${id}/${img.src}`;
+    const detail = getImageDetail(src);
+    return { ...img, src, detail };
 };

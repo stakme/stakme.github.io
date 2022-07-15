@@ -22,6 +22,14 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
 
     return (
         <>
+            <Head>
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
+                <link
+                    rel="preconnect"
+                    href="https://fonts.gstatic.com"
+                    crossOrigin="anonymous"
+                />
+            </Head>
             <Script
                 src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
                 strategy="afterInteractive"
@@ -32,7 +40,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
                     gtag('js', new Date());
                     gtag('config', '${GA_MEASUREMENT_ID}');
                 `}</Script>
-            <Component {...pageProps} />;
+            <Component {...pageProps} />
         </>
     );
 };

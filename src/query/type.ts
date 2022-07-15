@@ -1,18 +1,34 @@
-import { Line, Paragraph, PreformattedText } from "./parse";
+import { ImageDetail } from "../utils/image";
+import { Headline, MDImage, MDLine, PreformattedText } from "./parse";
 
 export type PostID = string;
 export interface Post {
     id: PostID;
-    summary: string;
-    ogTitle: string;
-    ogImagePath: string;
+    title: string;
+    og_title: string;
+    og_image: ImageDetail;
+    card_type: "text" | "image";
     tags: string;
     published_at: string;
     contents: Content[];
     timestamp: number;
 }
 
-export type Content = Paragraph | NestedList | PreformattedText;
+export type Content =
+    | Paragraph
+    | NestedList
+    | Headline
+    | Image
+    | PreformattedText;
+
+export interface Image extends MDImage {
+    detail: ImageDetail;
+}
+
+export interface Paragraph {
+    type: "paragraph";
+    lines: MDLine[];
+}
 
 export interface NestedList {
     type: "list";
@@ -21,6 +37,6 @@ export interface NestedList {
     items: NestedListItem[];
 }
 export interface NestedListItem {
-    line: Line;
+    line: MDLine;
     child?: NestedList;
 }

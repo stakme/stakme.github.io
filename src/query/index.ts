@@ -1,9 +1,10 @@
 import fs from "fs";
 import { parse } from "./parse";
 import { Temporal } from "@js-temporal/polyfill";
-import { convertList } from "./convert";
+import { convertImage, convertList } from "./convert";
 import { Post, PostID } from "./type";
-import { getOGImagePath } from "../utils/image";
+import { getOGImagePath } from "../utils/og_image";
+import { getImageDetail } from "../utils/image";
 
 type PostObject = { [key: PostID]: Post };
 
@@ -18,21 +19,33 @@ async function postByID(): Promise<PostObject> {
             }
 
             const id = name.replace(/\.md$/, "");
-            const ogTitle = post.og_title ?? post.summary;
-            const ogImagePath = await getOGImagePath(id, ogTitle);
+            let featuredImagePath = "";
+            const contents = post.contents.map((content) => {
+                if (content.type === "list") {
+                    return convertList(content);
+                }
+                if (content.type === "image") {
+                    const img = convertImage(id, content);
+                    if (!featuredImagePath && img.featured) {
+                        featuredImagePath = img.src;
+                    }
+                    return img;
+                }
+                return content;
+            });
+            const ogTitle = post.og_title ?? post.title;
+            const ogImagePath =
+                featuredImagePath || (await getOGImagePath(id, ogTitle));
+            console.log(ogTitle);
             postByID[id] = {
                 ...post,
                 id,
                 timestamp: Temporal.ZonedDateTime.from(post.published_at)
                     .epochSeconds,
-                ogTitle,
-                ogImagePath,
-                contents: post.contents.map((content) => {
-                    if (content.type === "list") {
-                        return convertList(content);
-                    }
-                    return content;
-                }),
+                og_title: ogTitle,
+                og_image: getImageDetail(ogImagePath),
+                card_type: featuredImagePath ? "image" : "text",
+                contents,
             };
         } catch (e) {
             console.error(name, e);
@@ -51,4 +64,4 @@ export async function getAllPosts(): Promise<Post[]> {
 }
 
 export type { Post, PostID, Content } from "./type";
-export type { Line } from "./parse";
+export type { MDLine as Line } from "./parse";

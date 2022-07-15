@@ -1,4 +1,8 @@
 {
-  "textlint.autoFixOnSave": true,
-  "textlint.languages": ["ja"]
+    "textlint.autoFixOnSave": true,
+    "textlint.languages": ["ja"],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "eslint.validate": ["typescript", "typescriptreact"]
 }

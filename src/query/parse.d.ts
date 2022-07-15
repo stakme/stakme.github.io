@@ -1,5 +1,5 @@
 interface ParsedPost {
-    summary: string;
+    title: string;
     tags: string;
     published_at: string;
     og_title?: string;
@@ -8,10 +8,11 @@ interface ParsedPost {
 }
 
 // content
-type ParsedContent = Paragraph | List | PreformattedText;
-interface Paragraph {
+type ParsedContent = MDParagraph | List | Headline | MDImage | PreformattedText;
+
+interface MDParagraph {
     type: "paragraph";
-    lines: Line[];
+    lines: MDLine[];
 }
 
 interface PreformattedText {
@@ -28,12 +29,28 @@ interface List {
 interface ListItem {
     type: "ordered" | "unordered";
     depth: number;
-    line: Line;
+    line: MDLine;
+}
+
+// headline
+interface Headline {
+    type: "headline";
+    depth: number;
+    items: (RawLinePart | CodeLinePart | LinkLinePart)[];
+}
+
+// image
+interface MDImage {
+    type: "image";
+    featured: boolean;
+    alt: string;
+    src: string;
+    title?: string;
 }
 
 // line
-type Line = LinePart[];
-type LinePart = RawLinePart | CodeLinePart | ImageLinePart | LinkLinePart;
+export type MDLine = MDLinePart[];
+type MDLinePart = RawLinePart | CodeLinePart | LinkLinePart;
 interface RawLinePart {
     type: "raw";
     str: string;
@@ -42,15 +59,9 @@ interface CodeLinePart {
     type: "code";
     str: string;
 }
-interface ImageLinePart {
-    type: "image";
-    alt: string;
-    src: string;
-    title?: string;
-}
 interface LinkLinePart {
     type: "link";
-    content: string;
+    contents: (RawLinePart | CodeLinePart)[];
     href: string;
 }
 
