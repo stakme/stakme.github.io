@@ -8,8 +8,8 @@ export const Header: FC = () => (
             <Headline depth={1}>@stakme</Headline>
         </div>
         <div className="items-end md:flex">
-            <div className="flex gap-2">
-                <div className="grow">大丈夫になりたいブログ</div>
+            <div className="grow">大丈夫になりたいブログ</div>
+            <div className="flex justify-end gap-2">
                 <TextLink href="/">top</TextLink>
                 <TextLink href="https://twitter.com/stakme">Twitter</TextLink>
                 <TextLink href="http://github.com/stakme/stakme.github.io">

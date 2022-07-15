@@ -36,7 +36,6 @@ async function postByID(): Promise<PostObject> {
             const ogTitle = post.og_title ?? post.title;
             const ogImagePath =
                 featuredImagePath || (await getOGImagePath(id, ogTitle));
-            console.log(ogTitle);
             postByID[id] = {
                 ...post,
                 id,
