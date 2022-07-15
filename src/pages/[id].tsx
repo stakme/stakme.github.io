@@ -5,7 +5,6 @@ import Image from "next/image";
 import { getPost, getAllPosts, Line, Content, Post, PostID } from "../query";
 import { TextLink } from "../components/link";
 import { NestedList } from "../query/type";
-import { getContentsString } from "../utils/post";
 import { MainContainer } from "../components/container";
 import { Header } from "../components/header";
 import { Headline } from "../components/headline";
@@ -138,13 +137,10 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
                     name="twitter:title"
                     content="@stakme | 大丈夫になりたい"
                 />
-                <meta
-                    name="twitter:description"
-                    content={getContentsString(post.contents)}
-                />
+                <meta name="twitter:description" content={post.title} />
                 <meta
                     name="twitter:image"
-                    content={`https://stak.me/${post.og_image.path}`}
+                    content={`https://stak.me${post.og_image.path}`}
                 />
             </Head>
 
