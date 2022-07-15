@@ -14,7 +14,7 @@ const MyDocument: FC<DocumentProps> = () => {
                 {googleFonts.map((font, i) => (
                     <link
                         key={i}
-                        href={`https://fonts.googleapis.com/css2?family=${font}&display=auto`}
+                        href={`https://fonts.googleapis.com/css2?family=${font}&display=swap`}
                         rel="stylesheet"
                     />
                 ))}
