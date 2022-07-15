@@ -9,6 +9,7 @@ import { getContentsString } from "../utils/post";
 import { MainContainer } from "../components/container";
 import { Header } from "../components/header";
 import { Headline } from "../components/headline";
+import { Footer } from "../components/footer";
 
 const renderLine: (line: Line) => ReactNode = (line) => {
     return line.map((l, i) => {
@@ -161,6 +162,7 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
                     )}
                 </div>
             </article>
+            <Footer />
         </MainContainer>
     );
 };

@@ -10,6 +10,7 @@ import { Header } from "../components/header";
 import Image from "next/image";
 import Link from "next/link";
 import { Headline } from "../components/headline";
+import { Footer } from "../components/footer";
 
 interface PostSummary {
     id: string;
@@ -78,15 +79,7 @@ const page: FC<{ posts: PostSummary[] }> = ({ posts }) => {
                         </section>
                     ))}
                 </div>
-                <div className="py-8">
-                    <p>
-                        このサイトはGoogleアナリティクスを利用し、お使いのウェブブラウザから特定の情報を収集します。
-                        <TextLink href="https://policies.google.com/technologies/partner-sites">
-                            データが収集、処理される仕組みについて
-                            (Google提供サイト)
-                        </TextLink>
-                    </p>
-                </div>
+                <Footer />
             </main>
         </MainContainer>
     );
