@@ -35,7 +35,7 @@ test("list conversion", () => {
             { line: [{ type: "raw", str: "c" }] },
         ],
     };
-    const got = convertList("hoge", {
+    const got = convertList({
         type: "list",
         items: [
             { type: "unordered", depth: 0, line: [{ type: "raw", str: "a" }] },

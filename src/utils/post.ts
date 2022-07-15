@@ -13,9 +13,6 @@ const getLinePartString: (line: MDLinePart) => string = (line) => {
         case "link": {
             return line.contents.map(getLinePartString).join(separator);
         }
-        case "image": {
-            return line.alt;
-        }
     }
 };
 
@@ -43,6 +40,10 @@ export const getContentsString: (contents: Content[]) => string = (
             }
             case "list": {
                 strings.push(...content.items.map(getListItemString));
+                continue;
+            }
+            case "image": {
+                strings.push(content.title);
                 continue;
             }
             case "pre": {

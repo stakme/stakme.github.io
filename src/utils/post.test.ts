@@ -3,9 +3,9 @@ import { getContentsString } from "./post";
 test("getContentsString", () => {
     const expected =
         "headline string headline str " +
+        "img title " +
         "raw string code str " +
         "linked code linked raw string " +
-        "alt " +
         "list string 1 list string 2 " +
         "list string a list string b " +
         "list string 3 " +
@@ -18,6 +18,14 @@ test("getContentsString", () => {
                 { type: "raw", str: "headline string" },
                 { type: "code", str: "headline str" },
             ],
+        },
+        {
+            type: "image",
+            src: "src",
+            alt: "alt",
+            title: "img title",
+            featured: false,
+            detail: { path: "", width: 0, height: 0 },
         },
         {
             type: "paragraph",
@@ -34,13 +42,6 @@ test("getContentsString", () => {
                             { type: "code", str: "linked code" },
                             { type: "raw", str: "linked raw string" },
                         ],
-                    },
-                    {
-                        type: "image",
-                        src: "src",
-                        alt: "alt",
-                        featured: false,
-                        detail: { path: "", width: 0, height: 0 },
                     },
                 ],
             ],

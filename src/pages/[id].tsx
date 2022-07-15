@@ -17,7 +17,10 @@ const renderLine: (line: Line) => ReactNode = (line) => {
         }
         if (l.type === "code") {
             return (
-                <code className="mx-1 bg-orange-100 p-1" key={i}>
+                <code
+                    className="rounded-md border border-orange-400 bg-orange-100 py-0.5 px-1"
+                    key={i}
+                >
                     {l.str}
                 </code>
             );
@@ -57,14 +60,14 @@ const renderListItems: (list: NestedList) => ReactNode = (list) => {
 const renderList: (list: NestedList) => ReactNode = (list) => {
     if (list.order === "ordered") {
         return (
-            <ol className="list-inside list-decimal" key={list.depth}>
+            <ol className="grid list-decimal gap-1.5 pl-6" key={list.depth}>
                 {renderListItems(list)}
             </ol>
         );
     }
     if (list.order === "unordered") {
         return (
-            <ul className="list-inside list-disc" key={list.depth}>
+            <ul className="grid list-disc gap-1.5 pl-6" key={list.depth}>
                 {renderListItems(list)}
             </ul>
         );
@@ -146,11 +149,13 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
 
             <Header />
             <article>
-                <Headline depth={2}>{post.title}</Headline>
-                <div className="pt-2 pb-8 text-right text-gray-500">
-                    {post.published_at}
+                <div className="my-8 border-b-4 border-dotted pb-8">
+                    <div className="mb-2 text-gray-500">
+                        {post.published_at}
+                    </div>
+                    <Headline depth={2}>{post.title}</Headline>
                 </div>
-                <div className="grid grid-cols-1 gap-4 font-serif">
+                <div className="grid grid-cols-1 gap-4 font-serif leading-7">
                     {post.contents.map((content, i) =>
                         renderContent(content, i)
                     )}
@@ -163,7 +168,6 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
 export const getStaticProps: GetStaticProps<{ id: string }> = async (ctx) => {
     const postID = ctx.params?.id as PostID;
     const post = await getPost(postID);
-    console.log(JSON.stringify(post.contents));
     return {
         props: {
             id: postID,
