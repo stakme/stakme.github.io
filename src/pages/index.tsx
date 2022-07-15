@@ -9,6 +9,7 @@ import { getContentsString } from "../utils/post";
 import { Header } from "../components/header";
 import Image from "next/image";
 import Link from "next/link";
+import { Headline } from "../components/headline";
 
 interface PostSummary {
     id: string;
@@ -40,6 +41,7 @@ const page: FC<{ posts: PostSummary[] }> = ({ posts }) => {
             <main>
                 <Header />
                 <div className="grid gap-4">
+                    <Headline depth={2}>最近の記事</Headline>
                     {posts.map((post) => (
                         <section
                             key={post.id}
@@ -62,9 +64,9 @@ const page: FC<{ posts: PostSummary[] }> = ({ posts }) => {
                                                 post.id
                                             )}`}
                                         >
-                                            <h2 className="text-lg">
+                                            <Headline depth={5}>
                                                 {post.title}
-                                            </h2>
+                                            </Headline>
                                         </TextLink>
                                         <div className="my-1">
                                             {post.summary}
@@ -76,7 +78,7 @@ const page: FC<{ posts: PostSummary[] }> = ({ posts }) => {
                         </section>
                     ))}
                 </div>
-                <div className="pt-8">
+                <div className="py-8">
                     <p>
                         このサイトはGoogleアナリティクスを利用し、お使いのウェブブラウザから特定の情報を収集します。
                         <TextLink href="https://policies.google.com/technologies/partner-sites">

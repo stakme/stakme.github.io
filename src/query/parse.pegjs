@@ -107,11 +107,12 @@ ImagePart
             title: t && t[2].join(""),
         }
     }
+    / "!" { return {type: "raw", str: "!" } }
 
 RawPart
     = cs:RawPartChar+ { return {type: "raw", str: cs.join("")} }
 RawPartChar
-    = [^`[\n]
+    = [^!`[\n]
 
 // base
 Str

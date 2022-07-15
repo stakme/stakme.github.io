@@ -13,6 +13,10 @@ const MyDocument: FC<DocumentProps> = () => {
                     href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap"
                     rel="stylesheet"
                 />
+                <link
+                    href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic&display=swap"
+                    rel="stylesheet"
+                />
             </Head>
             <body>
                 <Main />

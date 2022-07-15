@@ -3,7 +3,7 @@ import { Headline } from "./headline";
 import { TextLink } from "./link";
 
 export const Header: FC = () => (
-    <header>
+    <header className="mb-6 border-b-2">
         <div className="mb-8 gap-y-4 md:flex">
             <div>
                 <Headline depth={1}>@stakme</Headline>

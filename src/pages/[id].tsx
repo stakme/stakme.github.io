@@ -31,18 +31,26 @@ const renderLine: (line: Line) => ReactNode = (line) => {
         }
         if (l.type === "image") {
             return (
-                <div className="flex flex-col rounded-xl border" key={i}>
-                    <Image
-                        className="rounded-t-xl"
+                <div className="flex justify-center">
+                    <div
+                        className="flex max-w-xl flex-col rounded-xl border"
                         key={i}
-                        src={l.src}
-                        alt={l.alt}
-                        title={l.title}
-                        objectFit="contain"
-                        height={l.detail.height}
-                        width={l.detail.width}
-                    />
-                    <div className="p-2 text-sm text-gray-500">{l.title}</div>
+                    >
+                        <Image
+                            className="rounded-t-xl "
+                            key={i}
+                            src={l.src}
+                            alt={l.alt}
+                            title={l.title}
+                            objectFit="contain"
+                            height={l.detail.height}
+                            width={l.detail.width}
+                        />
+
+                        <div className="p-3 text-sm text-gray-500">
+                            {l.title}
+                        </div>
+                    </div>
                 </div>
             );
         }
@@ -96,15 +104,11 @@ const renderContent: (content: Content, index: number) => ReactNode = (
         return <div key={i}>{content.lines.map(renderLine).flat()}</div>;
     }
     if (content.type === "list") {
-        return (
-            <div className="my-8" key={i}>
-                {renderList(content)}
-            </div>
-        );
+        return <div key={i}>{renderList(content)}</div>;
     }
     if (content.type === "pre") {
         return (
-            <pre key={i} className="m-4 overflow-auto bg-stone-100 p-6">
+            <pre key={i} className="overflow-auto bg-stone-100 p-6">
                 {content.lines.join("\n")}
             </pre>
         );
@@ -142,15 +146,15 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
 
             <Header />
             <article>
-                {post.title ? (
-                    <Headline depth={2}>{post.title}</Headline>
-                ) : (
-                    <></>
-                )}
-                <div className="py-2 text-right text-gray-500">
+                <Headline depth={2}>{post.title}</Headline>
+                <div className="pt-2 pb-8 text-right text-gray-500">
                     {post.published_at}
                 </div>
-                {post.contents.map((content, i) => renderContent(content, i))}
+                <div className="grid grid-cols-1 gap-4 font-serif">
+                    {post.contents.map((content, i) =>
+                        renderContent(content, i)
+                    )}
+                </div>
             </article>
         </MainContainer>
     );
@@ -159,6 +163,7 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
 export const getStaticProps: GetStaticProps<{ id: string }> = async (ctx) => {
     const postID = ctx.params?.id as PostID;
     const post = await getPost(postID);
+    console.log(JSON.stringify(post.contents));
     return {
         props: {
             id: postID,
