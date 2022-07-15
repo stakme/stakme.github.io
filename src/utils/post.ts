@@ -1,10 +1,10 @@
 import { Content } from "../query";
-import { LinePart } from "../query/parse";
+import { MDLinePart } from "../query/parse";
 import { NestedListItem } from "../query/type";
 
 const separator = " ";
 
-const getLinePartString: (line: LinePart) => string = (line) => {
+const getLinePartString: (line: MDLinePart) => string = (line) => {
     switch (line.type) {
         case "raw":
         case "code": {
@@ -53,5 +53,3 @@ export const getContentsString: (contents: Content[]) => string = (
     }
     return strings.join(separator);
 };
-
-// export const getFeaturedImage(contents: Content[]) =>

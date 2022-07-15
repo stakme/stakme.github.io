@@ -2,8 +2,9 @@ import { ImageDetail } from "../utils/image";
 import {
     CodeLinePart,
     Headline,
-    ImageLinePart,
     LinkLinePart,
+    MDHeadline,
+    MDImageLinePart,
     PreformattedText,
     RawLinePart,
 } from "./parse";
@@ -23,14 +24,14 @@ export interface Post {
 
 export type Content = Paragraph | NestedList | Headline | PreformattedText;
 
-interface Paragraph {
+export interface Paragraph {
     type: "paragraph";
     lines: Line[];
 }
 
 export type Line = LinePart[];
-type LinePart = RawLinePart | CodeLinePart | PostImageLinePart | LinkLinePart;
-interface PostImageLinePart extends ImageLinePart {
+type LinePart = RawLinePart | CodeLinePart | ImageLinePart | LinkLinePart;
+export interface ImageLinePart extends MDImageLinePart {
     detail: ImageDetail;
 }
 

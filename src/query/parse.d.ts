@@ -8,11 +8,11 @@ interface ParsedPost {
 }
 
 // content
-type ParsedContent = RawParagraph | List | Headline | PreformattedText;
+type ParsedContent = MDParagraph | List | Headline | PreformattedText;
 
-interface RawParagraph {
+interface MDParagraph {
     type: "paragraph";
-    lines: Line[];
+    lines: MDLine[];
 }
 
 interface PreformattedText {
@@ -29,19 +29,19 @@ interface List {
 interface ListItem {
     type: "ordered" | "unordered";
     depth: number;
-    line: Line;
+    line: MDLine;
 }
 
 // headline
 interface Headline {
     type: "headline";
     depth: number;
-    items: Line;
+    items: (RawLinePart | CodeLinePart | LinkLinePart)[];
 }
 
 // line
-type Line = LinePart[];
-type LinePart = RawLinePart | CodeLinePart | ImageLinePart | LinkLinePart;
+export type MDLine = MDLinePart[];
+type MDLinePart = RawLinePart | CodeLinePart | MDImageLinePart | LinkLinePart;
 interface RawLinePart {
     type: "raw";
     str: string;
@@ -50,7 +50,7 @@ interface CodeLinePart {
     type: "code";
     str: string;
 }
-interface ImageLinePart {
+interface MDImageLinePart {
     type: "image";
     featured: boolean;
     alt: string;

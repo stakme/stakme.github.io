@@ -27,7 +27,7 @@ HeaderMultiLine
 
 // headline
 Headline
-    = tag:"#"+ Space+ l:Line { return { type: "headline", depth: tag.length, items: l} }
+    = tag:"#"+ Space+ l:TextLine { return { type: "headline", depth: tag.length, items: l} }
 
 // paragraph
 Paragraph
@@ -53,11 +53,16 @@ OrderedList
 
 // line
 Line = LinePart+
-
 LinePart
    = CodePart
    / LinkPart
    / ImagePart
+   / RawPart
+
+TextLine = TextLinePart+
+TextLinePart
+   = CodePart
+   / LinkPart
    / RawPart
 
 CodePart

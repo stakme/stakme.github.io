@@ -1,8 +1,8 @@
 import fs from "fs";
 import { parse } from "./parse";
 import { Temporal } from "@js-temporal/polyfill";
-import { convertList } from "./convert";
-import { Post, PostID } from "./type";
+import { convertList, convertParagraph } from "./convert";
+import { ImageLinePart, Paragraph, Post, PostID } from "./type";
 import { getOGImagePath } from "../utils/og_image";
 import { getImageDetail } from "../utils/image";
 
@@ -20,31 +20,26 @@ async function postByID(): Promise<PostObject> {
 
             // TODO: コードが汚くてびっくりしちゃった
             const id = name.replace(/\.md$/, "");
-            let featuredImagePath = "";
+            const paragraphs: Paragraph[] = [];
             const contents = post.contents.map((content) => {
                 if (content.type === "list") {
-                    return convertList(content);
+                    return convertList(id, content);
                 }
                 if (content.type === "paragraph") {
-                    return {
-                        ...content,
-                        lines: content.lines.map((ll) =>
-                            ll.map((line) => {
-                                if (line.type !== "image") {
-                                    return line;
-                                }
-                                const src = `/posts/${id}/${line.src}`;
-                                const detail = getImageDetail(src);
-                                if (line.featured) {
-                                    featuredImagePath = src;
-                                }
-                                return { ...line, src, detail };
-                            })
-                        ),
-                    };
+                    const paragraph = convertParagraph(id, content);
+                    paragraphs.push(paragraph);
+                    return paragraph;
                 }
+
                 return content;
             });
+            const featuredImagePath = paragraphs
+                .flatMap((p) => p.lines)
+                .flat()
+                .filter(
+                    (l): l is ImageLinePart => l.type === "image" && l.featured
+                )
+                .map((i) => i.src)[0];
             const ogTitle = post.og_title ?? post.title;
             const ogImagePath =
                 featuredImagePath || (await getOGImagePath(id, ogTitle));
