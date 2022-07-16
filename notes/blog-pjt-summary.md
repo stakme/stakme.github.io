@@ -90,6 +90,8 @@ published_at: 2022-07-02T00:29:51+09:00[Asia/Tokyo]
 
 ひとことで言うと[`node-canvas`](https://github.com/Automattic/node-canvas)で[頑張って作っています](https://github.com/stakme/stakme.github.io/blob/6aa9f3033c5ea3ed967abb0e03b1a1838183c64f/src/utils/image.ts)。おわり。
 
+![OGP自動生成サンプル画像](ogp_sample.png "サンプル画像。いい感じの改行になるよう、手作業で設定している")
+
 これほぼTwitter Cardのために作った機能なんですが、クリックレート向上にどのくらい寄与するのかは未知数です。謎い。
 
 明確な課題として、自然な改行を入れてあげることができないため、タイトルが長い場合は人力で「改行ありバージョン」のタイトルを書く必要があります。面倒すぎて絶対にワークしないやつなので改善したい気はしつつ… OGP画像に効果があるならそのうちやるのかなー。
