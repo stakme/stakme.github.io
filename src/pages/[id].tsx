@@ -93,7 +93,7 @@ const renderContent: (content: Content, index: number) => ReactNode = (
     }
     if (content.type === "image") {
         return (
-            <div className="flex justify-center">
+            <div key={i} className="flex justify-center">
                 <div
                     className="flex max-w-xl flex-col rounded-xl border"
                     key={i}
@@ -117,10 +117,16 @@ const renderContent: (content: Content, index: number) => ReactNode = (
         );
     }
     if (content.type === "headline") {
+        let c = "";
+        if (content.depth === 2) {
+            c = "mt-8";
+        }
         return (
-            <Headline key={i} depth={content.depth}>
-                {renderLine(content.items)}
-            </Headline>
+            <div className={c}>
+                <Headline key={i} depth={content.depth}>
+                    {renderLine(content.items)}
+                </Headline>
+            </div>
         );
     }
     return <span key={i}></span>;
@@ -133,11 +139,11 @@ const Blog: FC<{ post: Post }> = ({ post }) => {
                 <title>大丈夫になりたい | {post.title}</title>
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:site" content="@stakme" />
+                <meta name="twitter:title" content={post.title} />
                 <meta
-                    name="twitter:title"
+                    name="twitter:description"
                     content="@stakme | 大丈夫になりたい"
                 />
-                <meta name="twitter:description" content={post.title} />
                 <meta
                     name="twitter:image"
                     content={`https://stak.me${post.og_image.path}`}
